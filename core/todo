@@ -1,0 +1,16 @@
+--------------------------------------------
+[Core classes]
+--------------------------------------------
+- Level
+	- Describes obstacle locations
+	- Describes start location
+	- Describes destination location
+	- Describes initial angle position
+	- Describes appearance
+
+- It
+	- The 'thing' you guide to the destination
+
+- DrawLine
+	- The lines a user draws to direct 'It' to the destination
+	
