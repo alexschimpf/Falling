@@ -1,8 +1,15 @@
 package com.tendersaucer.untitled;
 
-public class DrawLine {
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class DrawLine implements IDraw {
 
 	public DrawLine() {
+		
+	}
+
+	@Override
+	public void draw(SpriteBatch spriteBatch) {
 		
 	}
 }

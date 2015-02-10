@@ -13,9 +13,6 @@ public abstract class Entity implements IUpdate, IDraw {
 	protected Sprite sprite;
 	protected Body body;
 	
-	protected Entity(float x, float y) {		
-	}
-	
 	public static Entity create(Class<?> classObj, float x, float y) {
 		Entity entity = null;
 		try {
@@ -29,6 +26,9 @@ public abstract class Entity implements IUpdate, IDraw {
 		return entity;
 	}
 	
+	protected Entity(float x, float y) {		
+	}
+	
 	@Override
 	public void draw(SpriteBatch spriteBatch) {
 		sprite.draw(spriteBatch);
@@ -36,10 +36,10 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	@Override
 	public boolean update() {
-		float x = this.body.getPosition().x;
-		float y = this.body.getPosition().y;
-		this.sprite.setPosition(x, y);
-		this.sprite.setRotation(MathUtils.radiansToDegrees * this.body.getAngle());
+		float x = body.getPosition().x;
+		float y = body.getPosition().y;
+		sprite.setPosition(x, y);
+		sprite.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 		
 		return false;
 	}
@@ -50,14 +50,14 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	public void setUserData() {
 		BodyData bodyData = new BodyData(this);
-		this.body.setUserData(bodyData);
+		body.setUserData(bodyData);
 	}
 	
 	public Sprite getSprite() {
-		return this.sprite;
+		return sprite;
 	}
 	
 	public Body getBody() {
-		return this.body;
+		return body;
 	}
 }

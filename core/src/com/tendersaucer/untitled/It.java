@@ -16,7 +16,7 @@ public class It extends Entity {
 		bodyDef.position.set(x, y);
 
 		World world = Globals.getInstance().getLevel().getWorld();
-		this.body = world.createBody(bodyDef);
+		body = world.createBody(bodyDef);
 
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(10);
@@ -26,7 +26,7 @@ public class It extends Entity {
 		fixtureDef.density = 0.1f;
 		fixtureDef.friction = 0.1f;
 		fixtureDef.restitution = 0.1f;
-		this.body.createFixture(fixtureDef);
+		body.createFixture(fixtureDef);
 
 		circleShape.dispose();
 	}

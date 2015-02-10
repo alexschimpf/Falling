@@ -24,10 +24,10 @@ public class Globals {
 	}
 	
 	public Level getLevel() {
-		return this.level;
+		return level;
 	}
 	
 	public State getState() {
-		return this.state;
+		return state;
 	}
 }
