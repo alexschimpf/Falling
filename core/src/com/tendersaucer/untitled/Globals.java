@@ -1,11 +1,7 @@
 package com.tendersaucer.untitled;
 
-import com.badlogic.gdx.physics.box2d.World;
-
 public class Globals {
 	
-	private It it;
-	private World world;
 	private Level level;
 	private State state;
 
@@ -25,14 +21,6 @@ public class Globals {
 	
 	public void setState(State state) {
 		this.state = state;
-	}
-	
-	public It getIt() {
-		return this.it;
-	}
-
-	public World getWorld() {
-		return this.world;
 	}
 	
 	public Level getLevel() {

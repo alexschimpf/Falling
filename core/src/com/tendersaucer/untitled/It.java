@@ -15,7 +15,7 @@ public class It extends Entity {
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
 
-		World world = Globals.getInstance().getWorld();
+		World world = Globals.getInstance().getLevel().getWorld();
 		this.body = world.createBody(bodyDef);
 
 		CircleShape circleShape = new CircleShape();
