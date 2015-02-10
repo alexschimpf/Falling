@@ -21,9 +21,10 @@ public abstract class Entity implements IUpdate, IDraw {
 		try {
 			Constructor<?> constructor = classObj.getConstructor(Float.class, Float.class);
 			entity = (Entity)constructor.newInstance(new Object[] { x, y });
+			entity.setUserData();
 		} catch(Exception e) {
 			Gdx.app.error("entity", "Error constructing entity from class!", e);
-		}	
+		}
 		
 		return entity;
 	}
