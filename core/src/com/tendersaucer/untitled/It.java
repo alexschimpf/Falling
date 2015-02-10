@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class It extends Entity {
 
-	public It(float x, float y) {
+	protected It(float x, float y) {
 		super(x, y);
 
 		BodyDef bodyDef = new BodyDef();
