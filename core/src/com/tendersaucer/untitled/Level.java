@@ -12,7 +12,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class Level implements IUpdate, IDraw {
 
-	protected static float GRAVITY = -10;
+	protected static final float GRAVITY = -10;
+	protected static final float MAX_START_SPEED = 10;
 	
 	protected float startAngle;
 	protected It it;
@@ -56,9 +57,10 @@ public class Level implements IUpdate, IDraw {
 		drawEntities(spriteBatch);
 		drawDrawLines(spriteBatch);
 	}
-	
-	public void begin() {
+
+	public void begin(float power) {
 		it = (It)Entity.create(It.class, startPos.x, startPos.y);
+		it.start(power * MAX_START_SPEED, startAngle);
 	}
 	
 	public Array<Body> getBodies() {
