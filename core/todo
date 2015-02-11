@@ -14,3 +14,28 @@
 - DrawLine
 	- The lines a user draws to direct 'It' to the destination
 	
+-----------------------------------------------------------------------------	
+	
+Building
+- Line-drawing input is handled
+- 'START' button exists
+- 'POWER' meter exists
+- Shoot angle is shown
+		
+Running
+- Line-drawing input is handled
+- Ball is shot out at specified angle
+- 'START' button disappears
+- Power meter disappears
+- Shoot angle disappears
+
+LevelWon
+- Line-drawing input is disabled
+- Remove ball
+- Level complete dialog appears
+
+LevelLost
+- Line-drawing input is disabled
+- Remove ball
+- Level failed dialog appears
+

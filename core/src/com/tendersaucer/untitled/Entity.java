@@ -20,7 +20,7 @@ public abstract class Entity implements IUpdate, IDraw {
 			entity = (Entity)constructor.newInstance(new Object[] { x, y });
 			entity.setUserData();
 		} catch(Exception e) {
-			Gdx.app.error("entity", "Error constructing entity from class!", e);
+			Gdx.app.error("tendersaucer.entity", "Error constructing entity from class!", e);
 		}
 		
 		return entity;
@@ -36,8 +36,8 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	@Override
 	public boolean update() {
-		float x = body.getPosition().x;
-		float y = body.getPosition().y;
+		float x = Utils.convertToPixels(body.getPosition().x);
+		float y = Utils.convertToPixels(body.getPosition().y);
 		sprite.setPosition(x, y);
 		sprite.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 		
@@ -51,6 +51,22 @@ public abstract class Entity implements IUpdate, IDraw {
 	public void setUserData() {
 		BodyData bodyData = new BodyData(this);
 		body.setUserData(bodyData);
+	}
+	
+	public float getX(boolean usePixels) {
+		if(usePixels) {
+			return sprite.getX();
+		} 
+		
+		return body.getPosition().x;
+	}
+	
+	public float getY(boolean usePixels) {
+		if(usePixels) {
+			return sprite.getY();
+		} 
+		
+		return body.getPosition().y;
 	}
 	
 	public Sprite getSprite() {

@@ -1,5 +1,7 @@
 package com.tendersaucer.untitled;
 
+import java.io.File;
+
 public class Globals {
 	
 	private Level level;
@@ -17,6 +19,10 @@ public class Globals {
 		}
 
 		return instance;
+	}
+	
+	public void initLevel(File file) {
+		level = new Level(file);
 	}
 	
 	public void setState(State state) {

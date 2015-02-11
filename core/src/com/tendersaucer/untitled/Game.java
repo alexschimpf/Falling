@@ -18,7 +18,41 @@ public class Game extends ApplicationAdapter {
 	public void render() {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		update();
+
 		batch.begin();
+		draw(batch);
 		batch.end();
+	}
+	
+	private void update() {
+		Globals globals = Globals.getInstance();
+		switch(globals.getState()) {
+			case Running:
+				globals.getLevel().update();
+				break;
+			case Building:
+				break;
+			case LevelLost:
+				break;
+			case LevelWon:
+				break;
+		}
+	}
+	
+	private void draw(SpriteBatch spriteBatch) {
+		Globals globals = Globals.getInstance();
+		switch(globals.getState()) {
+			case Running:
+				globals.getLevel().draw(spriteBatch);
+				break;
+			case Building:
+				break;
+			case LevelLost:
+				break;
+			case LevelWon:
+				break;
+		}
 	}
 }
