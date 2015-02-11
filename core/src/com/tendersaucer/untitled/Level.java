@@ -12,11 +12,11 @@ import com.badlogic.gdx.utils.Array;
 
 public class Level implements IUpdate, IDraw {
 
-	private static float GRAVITY = -10;
+	protected static float GRAVITY = -10;
 	
 	protected float startAngle;
-	private It it;
-	private World world;
+	protected It it;
+	protected World world;
 	protected Vector2 startPos;
 	protected Vector2 endPos;
 	protected LinkedList<DrawLine> drawLines = new LinkedList<DrawLine>();
