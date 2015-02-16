@@ -1,6 +1,8 @@
 package com.tendersaucer.untitled;
 
-import java.io.File;
+import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 public class Globals {
 	
@@ -10,7 +12,8 @@ public class Globals {
 	private static Globals instance;
 
 	private Globals() {
-		// TODO: initialize stuff
+		state = State.Running;
+		initLevel("test_level.xml");
 	}
 
 	public static Globals getInstance() {
@@ -21,8 +24,9 @@ public class Globals {
 		return instance;
 	}
 	
-	public void initLevel(File file) {
-		level = new Level(file);
+	public void initLevel(String filename) {
+		FileHandle fileHandle = Gdx.files.getFileHandle(filename, FileType.Internal);
+		level = new Level(fileHandle);
 	}
 	
 	public void setState(State state) {

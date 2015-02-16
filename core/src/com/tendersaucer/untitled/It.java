@@ -6,10 +6,12 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class It extends Entity {
+public class It extends DynamicEntity {
 
+	protected static final String SPRITE_FILENAME = "it.png";
+	
 	protected It(float x, float y) {
-		super(x, y);
+		super(SPRITE_FILENAME, x, y, 0, 0);
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;

@@ -1,8 +1,5 @@
 package com.tendersaucer.untitled;
 
-import java.lang.reflect.Constructor;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,21 +9,8 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	protected Sprite sprite;
 	protected Body body;
-	
-	public static Entity create(Class<?> classObj, float x, float y) {
-		Entity entity = null;
-		try {
-			Constructor<?> constructor = classObj.getConstructor(Float.class, Float.class);
-			entity = (Entity)constructor.newInstance(new Object[] { x, y });
-			entity.setUserData();
-		} catch(Exception e) {
-			Gdx.app.error("tendersaucer.entity", "Error constructing entity from class!", e);
-		}
-		
-		return entity;
-	}
-	
-	protected Entity(float x, float y) {		
+
+	protected Entity(String filename, float x, float y, float width, float height) {		
 	}
 	
 	@Override

@@ -1,14 +1,16 @@
 package com.tendersaucer.untitled;
 
-import java.io.File;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 
 public class Level implements IUpdate, IDraw {
 
@@ -22,8 +24,9 @@ public class Level implements IUpdate, IDraw {
 	protected Vector2 endPos;
 	protected LinkedList<DrawLine> drawLines = new LinkedList<DrawLine>();
 	
-	public Level(File file) {
-		world = new World(new Vector2(0, GRAVITY), true); 
+	public Level(FileHandle file) {
+		world = new World(new Vector2(0, GRAVITY), true); 	
+		buildLevelFromFile(file);
 	}
 	
 	// TODO: create constructor for level editor
@@ -59,7 +62,7 @@ public class Level implements IUpdate, IDraw {
 	}
 
 	public void begin(float power) {
-		it = (It)Entity.create(It.class, startPos.x, startPos.y);
+		it = new It(startPos.x, startPos.y);
 		it.start(power * MAX_START_SPEED, startAngle);
 	}
 	
@@ -119,5 +122,27 @@ public class Level implements IUpdate, IDraw {
 		}
 		
 		// TODO: check if it hasn't moved in awhile
+	}
+
+	protected void buildLevelFromFile(FileHandle file) {
+		try {
+    		XmlReader reader = new XmlReader();
+    		Element root = reader.parse(file).getChildByName("level");
+    		startAngle = root.getFloat("startAngle");
+    		startPos = new Vector2(root.getInt("startX"), root.getInt("startY"));
+    		endPos = new Vector2(root.getInt("endX"), root.getInt("endY"));
+    		
+    		Element entitiesRoot = root.getChildByName("entities");
+    		for(Element entity : entitiesRoot.getChildrenByName("entity")) {
+    			String objClass = entity.get("class");
+    			int x = entity.getInt("x");
+    			int y = entity.getInt("y");
+    			int width = entity.getInt("width");
+    			int height = entity.getInt("height");
+    			
+    		}
+		} catch(Exception e) {
+			Gdx.app.error("tendersaucer.level", "Error building level from file!", e);
+		}
 	}
 }
