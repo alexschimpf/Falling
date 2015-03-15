@@ -1,4 +1,4 @@
-package com.tendersaucer.untitled;
+package common;
 
 public interface IUpdate {
 	

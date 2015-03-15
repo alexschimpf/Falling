@@ -1,20 +1,26 @@
-package com.tendersaucer.untitled;
+package entity;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+
+import common.BodyData;
+import common.IDraw;
+import common.IUpdate;
+import common.Utils;
 
 public abstract class Entity implements IUpdate, IDraw {
 	
 	protected Sprite sprite;
 	protected Body body;
 
-	protected Entity(String filename, float x, float y, float width, float height) {		
+	protected Entity() {		
 	}
 	
 	@Override
-	public void draw(SpriteBatch spriteBatch) {
+	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		sprite.draw(spriteBatch);
 	}
 	
@@ -51,6 +57,24 @@ public abstract class Entity implements IUpdate, IDraw {
 		} 
 		
 		return body.getPosition().y;
+	}
+	
+	public float getWidth(boolean usePixels) {
+		float width = sprite.getWidth();
+		if(usePixels) {
+			return width;
+		} 
+		
+		return Utils.convertToMeters(width);
+	}
+	
+	public float getHeight(boolean usePixels) {
+		float height = sprite.getHeight();
+		if(usePixels) {
+			return height;
+		} 
+		
+		return Utils.convertToMeters(height);
 	}
 	
 	public Sprite getSprite() {

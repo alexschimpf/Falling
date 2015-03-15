@@ -2,7 +2,8 @@ package com.tendersaucer.untitled.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.tendersaucer.untitled.Game;
+
+import core.Game;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {

@@ -1,4 +1,6 @@
-package com.tendersaucer.untitled;
+package common;
+
+import entity.Entity;
 
 public class BodyData {
 

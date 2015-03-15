@@ -1,17 +1,20 @@
-package com.tendersaucer.untitled;
+package entity;
 
+import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class It extends DynamicEntity {
+import common.Globals;
+
+public final class TheEntity extends Entity {
 
 	protected static final String SPRITE_FILENAME = "it.png";
 	
-	protected It(float x, float y) {
-		super(SPRITE_FILENAME, x, y, 0, 0);
+	protected TheEntity(float x, float y) {
+		super();
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
@@ -35,16 +38,19 @@ public class It extends DynamicEntity {
 
 	@Override
 	public boolean update() {
+		if(!isInBounds()) {
+			return true;
+		}
+		
 		return false;
 	}
 
 	@Override
 	public void done() {
 	}
-
-	public void start(float speed, float angle) {
-		float vx = (float)(speed * Math.cos(speed));
-		float vy = (float)(speed * Math.sin(angle));
-		body.setLinearVelocity(vx, vy);
+	
+	private boolean isInBounds() {
+		Frustum frustum = Globals.getInstance().getCamera().frustum;
+		return frustum.boundsInFrustum(getX(true), getY(true), 0, getWidth(true) / 2, getHeight(true) / 2, 0);
 	}
 }

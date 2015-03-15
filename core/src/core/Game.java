@@ -1,17 +1,22 @@
-package com.tendersaucer.untitled;
+package core;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
+import common.Globals;
 
 public class Game extends ApplicationAdapter {
 
 	private SpriteBatch batch;
+	private ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
 	}
 
 	@Override
@@ -22,36 +27,36 @@ public class Game extends ApplicationAdapter {
 		update();
 
 		batch.begin();
-		draw(batch);
+		draw(batch, shapeRenderer);
 		batch.end();
 	}
 	
 	private void update() {
 		Globals globals = Globals.getInstance();
 		switch(globals.getState()) {
+			case Loading:
+				break;
 			case Running:
 				globals.getLevel().update();
 				break;
-			case Building:
+			case GameOver:
 				break;
-			case LevelLost:
-				break;
-			case LevelWon:
+			case Paused:
 				break;
 		}
 	}
 	
-	private void draw(SpriteBatch spriteBatch) {
+	private void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		Globals globals = Globals.getInstance();
 		switch(globals.getState()) {
+			case Loading:
+				break;
 			case Running:
-				globals.getLevel().draw(spriteBatch);
+				globals.getLevel().draw(spriteBatch, shapeRenderer);
 				break;
-			case Building:
+			case GameOver:
 				break;
-			case LevelLost:
-				break;
-			case LevelWon:
+			case Paused:
 				break;
 		}
 	}
