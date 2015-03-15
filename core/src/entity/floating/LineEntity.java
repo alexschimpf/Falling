@@ -1,5 +1,7 @@
 package entity.floating;
 
+import java.awt.geom.Line2D;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +21,7 @@ public final class LineEntity extends FloatingEntity {
 	private float color = 1;
 	private float x1, y1, x2, y2;
 	
-	protected LineEntity(float x1, float y1, float x2, float y2) {
+	public LineEntity(float x1, float y1, float x2, float y2) {
 		super();
 		
 		this.x1 = x1;
@@ -52,6 +54,10 @@ public final class LineEntity extends FloatingEntity {
 		color = 1 - (elapsed / LIFE_TIME);
 		
 		return super.update();
+	}
+	
+	public boolean intersectsLine(Line2D line) {
+		return line.intersectsLine(x1, y1, x2, y2);
 	}
 	
 	private void buildBody() {

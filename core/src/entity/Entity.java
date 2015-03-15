@@ -16,7 +16,7 @@ public abstract class Entity implements IUpdate, IDraw {
 	protected Sprite sprite;
 	protected Body body;
 
-	protected Entity() {		
+	public Entity() {		
 	}
 	
 	@Override

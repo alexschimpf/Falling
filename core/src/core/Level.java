@@ -1,5 +1,6 @@
 package core;
 
+import java.awt.geom.Line2D;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -56,6 +57,20 @@ public class Level implements IUpdate, IDraw {
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		drawEntities(spriteBatch, shapeRenderer);
 		drawLines(spriteBatch, shapeRenderer);
+	}
+	
+	public void addLine(LineEntity line) {
+		lines.add(line);
+	}
+	
+	public boolean lineIntersectsExisting(Line2D line) {
+		for(LineEntity lineEntity : lines) {
+			if(lineEntity.intersectsLine(line)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	public Array<Body> getBodies() {

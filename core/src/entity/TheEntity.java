@@ -13,7 +13,7 @@ public final class TheEntity extends Entity {
 
 	protected static final String SPRITE_FILENAME = "it.png";
 	
-	protected TheEntity(float x, float y) {
+	public TheEntity(float x, float y) {
 		super();
 
 		BodyDef bodyDef = new BodyDef();
