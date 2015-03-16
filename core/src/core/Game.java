@@ -68,6 +68,7 @@ public class Game extends ApplicationAdapter {
 			
 		updateLine(x, y, true);	
 		LineEntity lineEntity = new LineEntity(line.x1, line.y1, line.x2, line.y2);
+		lineEntity.setUserData();
 		level.addLine(lineEntity);
 	}
 	
