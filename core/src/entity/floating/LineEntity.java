@@ -45,9 +45,7 @@ public final class LineEntity extends FloatingEntity {
 	@Override
 	public boolean update() {
 		float elapsed = TimeUtils.millis() - startTime;
-		if(elapsed > LIFE_TIME)
-		{
-			Globals.getInstance().getLevel().getWorld().destroyBody(body);
+		if(elapsed > LIFE_TIME) {
 			return true;
 		}
 		
@@ -60,7 +58,8 @@ public final class LineEntity extends FloatingEntity {
 		return line.intersectsLine(x1, y1, x2, y2);
 	}
 	
-	private void buildBody() {
+	@Override
+	protected void buildBody() {
 		float dx = x2 - x1;
 		float dy = y2 - y1;
 		float w = (float)Math.sqrt((dx * dx) + (dy * dy));
@@ -72,7 +71,7 @@ public final class LineEntity extends FloatingEntity {
 		float cY = minY + Math.abs(dy) / 2;
 		
 		BodyDef bDef = new BodyDef();
-		bDef.type = BodyType.StaticBody;
+		bDef.type = BodyType.KinematicBody;
 		bDef.position.set(cX, cY);
 		body = Globals.getInstance().getLevel().getWorld().createBody(bDef);
 		

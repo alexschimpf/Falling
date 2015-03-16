@@ -22,19 +22,18 @@ public class Level implements IUpdate, IDraw {
 	protected static final float GRAVITY = -10;
 	
 	protected float speed = 5;
-	protected float startAngle;
 	protected TheEntity theEntity;
-	protected World world;
-	protected Vector2 startPos;
-	protected Vector2 endPos;
+	protected World world = new World(new Vector2(0, GRAVITY), true);
 	protected LinkedList<LineEntity> lines = new LinkedList<LineEntity>();
 	
 	public Level() {
-		world = new World(new Vector2(0, GRAVITY), true); 	
+		theEntity = new TheEntity();
 	}
 
 	@Override
 	public boolean update() {
+		tryBuild();
+		
 		for(Body body : getBodies()) {
 			Entity entity = getEntityFromBody(body);
 			if(entity == null) {
@@ -89,6 +88,10 @@ public class Level implements IUpdate, IDraw {
 	
 	public float getSpeed() {
 		return speed;
+	}
+	
+	protected void tryBuild() {
+		
 	}
 	
 	protected void drawEntities(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {

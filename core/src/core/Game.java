@@ -10,19 +10,24 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import common.Globals;
+import common.State;
 import entity.floating.LineEntity;
 
 public class Game extends ApplicationAdapter {
 
+	private Globals globals;
+	private Level level;
 	private Color lineColor = Color.WHITE;
 	private Line2D.Float line = new Line2D.Float();
-	private SpriteBatch batch;
-	private ShapeRenderer shapeRenderer;
+	private SpriteBatch batch = new SpriteBatch();
+	private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
 	@Override
 	public void create() {
-		batch = new SpriteBatch();
-		shapeRenderer = new ShapeRenderer();
+		globals = Globals.getInstance();
+		level = globals.getLevel();
+		globals.setGame(this);
+		globals.setState(State.Running);
 	}
 
 	@Override
@@ -38,7 +43,7 @@ public class Game extends ApplicationAdapter {
 	}
 	
 	public void updateLine(float x, float y, boolean isAnchored) {
-		if(Globals.getInstance().getLevel().lineIntersectsExisting(line)) {
+		if(level.lineIntersectsExisting(line)) {
 			lineColor = Color.RED;
 		} else {
 			lineColor = Color.WHITE;
@@ -63,7 +68,7 @@ public class Game extends ApplicationAdapter {
 			
 		updateLine(x, y, true);	
 		LineEntity lineEntity = new LineEntity(line.x1, line.y1, line.x2, line.y2);
-		Globals.getInstance().getLevel().addLine(lineEntity);
+		level.addLine(lineEntity);
 	}
 	
 	public void eraseLine() {
@@ -72,12 +77,11 @@ public class Game extends ApplicationAdapter {
 	}
 	
 	private void update() {
-		Globals globals = Globals.getInstance();
 		switch(globals.getState()) {
 			case Loading:
 				break;
 			case Running:
-				globals.getLevel().update();
+				level.update();
 				break;
 			case GameOver:
 				break;
@@ -87,12 +91,11 @@ public class Game extends ApplicationAdapter {
 	}
 	
 	private void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		Globals globals = Globals.getInstance();
 		switch(globals.getState()) {
 			case Loading:
 				break;
 			case Running:
-				globals.getLevel().draw(spriteBatch, shapeRenderer);
+				level.draw(spriteBatch, shapeRenderer);
 				break;
 			case GameOver:
 				break;

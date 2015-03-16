@@ -3,19 +3,22 @@ package common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
+import core.Game;
 import core.Level;
 
 public class Globals {
 	
 	private State state;
+	private Game game;
 	private Level level;
 	private OrthographicCamera camera;
 
 	private static Globals instance;
 
 	private Globals() {
-		state = State.Running;
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = new OrthographicCamera();
+		camera.setToOrtho(true, Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
+		level = new Level();
 	}
 
 	public static Globals getInstance() {
@@ -24,6 +27,14 @@ public class Globals {
 		}
 
 		return instance;
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	public OrthographicCamera getCamera() {
