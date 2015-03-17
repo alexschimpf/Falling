@@ -1,7 +1,9 @@
 package entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import common.BodyData;
@@ -23,14 +25,12 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		// TODO: sprite.draw(spriteBatch);
+		shapeRenderer.setColor(Color.GREEN);
+		shapeRenderer.box(x, y, 0, width, height, 0);
 	}
 	
 	@Override
 	public boolean update() {
-		x = Utils.convertToPixels(body.getPosition().x);
-		y = Utils.convertToPixels(body.getPosition().y);
-		
 		return false;
 	}
 	

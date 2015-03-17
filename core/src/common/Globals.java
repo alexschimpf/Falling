@@ -18,7 +18,6 @@ public class Globals {
 	private Globals() {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(true, Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
-		level = new Level();
 	}
 
 	public static Globals getInstance() {
@@ -27,6 +26,11 @@ public class Globals {
 		}
 
 		return instance;
+	}
+	
+	public void initLevel() {
+		level = new Level();
+		level.initTheEntity();
 	}
 	
 	public Game getGame() {

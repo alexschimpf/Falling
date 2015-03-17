@@ -7,14 +7,16 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+
 import common.Globals;
+import common.Utils;
 
 public class NeutralEntity extends FloatingEntity {
 
 	public NeutralEntity(float x, float y, float width, float height) {
 		super(x, y, width, height);
 		
-		setRandomVelocity();
+		setStraightVelocity();
 		
 		buildBody();
 	}
@@ -24,8 +26,21 @@ public class NeutralEntity extends FloatingEntity {
 		shapeRenderer.box(x, y, 0, width, height, 0);
 	}
 	
+	@Override
+	public boolean update() {
+		x = Utils.convertToPixels(body.getPosition().x);
+		y = Utils.convertToPixels(body.getPosition().y);
+		
+		return super.update();
+	}
+	
 	@Override 
 	protected void buildBody() {
+		float x = Utils.convertToMeters(this.x);
+		float y = Utils.convertToMeters(this.y);
+		float width = Utils.convertToMeters(this.width);
+		float height = Utils.convertToMeters(this.height);
+		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.KinematicBody;
 		bodyDef.position.set(x, y);

@@ -3,17 +3,18 @@ package common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.InputProcessor;
 
-import core.Game;
+import entity.floating.LineEntity;
 
 public class InputListener implements InputProcessor {
 	
-	private Game game;
+	private boolean isLineAnchored = false;
+	private Color lineColor = Color.WHITE;
+	private Line line = new Line();
 	
-	public InputListener(Game game)
-	{
-		this.game = game;
+	public InputListener() {
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class InputListener implements InputProcessor {
 			return false;
 		}
 		
-        game.updateLine(screenX, screenY, false);
+        updateLine(screenX, screenY);
 		
 		return true;
 	}
@@ -54,8 +55,8 @@ public class InputListener implements InputProcessor {
 			return false;
 		}
 		
-		game.tryBuildLine(screenX, screenY);		
-		game.eraseLine();
+		tryBuildLine(screenX, screenY);		
+		eraseLine();
 		
 		return true;
 	}
@@ -66,7 +67,7 @@ public class InputListener implements InputProcessor {
 			return false;
 		}
 		
-		game.updateLine(screenX, screenY, true);
+		updateLine(screenX, screenY);
 
 		return true;
 	}
@@ -79,6 +80,53 @@ public class InputListener implements InputProcessor {
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+	
+	public Line getLine() {
+		return line;
+	}
+	
+	public Color getLineColor() {
+		return lineColor;
+	}
+	
+	public void checkLineValidity() {
+		if(!isLineAnchored) {
+			return;
+		}
+		
+		if(Globals.getInstance().getLevel().isLineValid(line)) {
+			lineColor = Color.WHITE;
+		} else {
+			lineColor = Color.RED;
+		}
+	}
+	
+	private void updateLine(float x, float y) {
+		if(isLineAnchored) {
+			line.setLine(line.x1, line.y1, x, y);
+		} else {
+			line.setLine(x, y, x, y);
+		}
+		
+		isLineAnchored = true;
+	}
+	
+	private void tryBuildLine(float x, float y) {
+		// Don't build line if it is invalid.
+		if(lineColor.r > lineColor.g) {
+			return;
+		}
+			
+		updateLine(x, y);	
+		LineEntity lineEntity = new LineEntity(line.x1, line.y1, line.x2, line.y2);
+		lineEntity.setUserData();
+		Globals.getInstance().getLevel().addLine(lineEntity);
+	}
+	
+	private void eraseLine() {
+		isLineAnchored = false;
+		line.setLine(0, 0, 0, 0);
 	}
 }
 

@@ -1,9 +1,9 @@
 package entity;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -12,11 +12,13 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 import common.Globals;
+import common.State;
+import common.Utils;
 
 public final class TheEntity extends Entity {
 	
-	private static final float DEFAULT_WIDTH = 10;
-	private static final float DEFAULT_HEIGHT = 10;
+	private static final float DEFAULT_WIDTH = Gdx.graphics.getWidth() / 40;
+	private static final float DEFAULT_HEIGHT = DEFAULT_WIDTH;
 	
 	public TheEntity() {
 		super();
@@ -33,6 +35,9 @@ public final class TheEntity extends Entity {
 	public boolean update() {
 		super.update();
 		
+		x = Utils.convertToPixels(body.getPosition().x);
+		y = Utils.convertToPixels(body.getPosition().y);
+		
 		if(!isInBounds()) {
 			return true;
 		}
@@ -42,15 +47,21 @@ public final class TheEntity extends Entity {
 
 	@Override
 	public void done() {
+		Globals.getInstance().setState(State.GameOver);
 	}
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
+		shapeRenderer.setColor(Color.BLUE);
 		shapeRenderer.circle(x, y, width);
 	}
 	
 	@Override
 	protected void buildBody() {
+		float x = Utils.convertToMeters(this.x);
+		float y = Utils.convertToMeters(this.y);
+		float width = Utils.convertToMeters(this.width);
+		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
@@ -72,7 +83,12 @@ public final class TheEntity extends Entity {
 	}
 	
 	private boolean isInBounds() {
-		Frustum frustum = Globals.getInstance().getCamera().frustum;
-		return frustum.boundsInFrustum(getX(true), getY(true), 0, getWidth(true) / 2, getHeight(true) / 2, 0);
+		float left = x - (width / 2);
+		float right = left + width;
+		float top = y - (height / 2);
+		float bottom = top + height;
+		
+		return right >= 0 && left <= Gdx.graphics.getWidth() && 
+			   top <= Gdx.graphics.getHeight() && bottom >= 0;
 	}
 }

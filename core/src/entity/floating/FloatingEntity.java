@@ -2,12 +2,6 @@ package entity.floating;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 import common.Globals;
 import entity.Entity;
@@ -32,19 +26,11 @@ public abstract class FloatingEntity extends Entity {
 	
 	@Override
 	public boolean update() {
-		super.update();
+		body.setLinearVelocity(vx, -vy);
 		
-		body.setLinearVelocity(vx, vy);
-		
-		return getY(true) + getHeight(true) <= 0;
+		return super.update() || getY(true) + getHeight(true) <= 0;
 	}
 	
-	@Override 
-	public void done() {
-		
-	}
-	
-	// TODO: REMOVE THIS!
 	@Override
 	protected void buildBody() {
 	}
@@ -56,10 +42,10 @@ public abstract class FloatingEntity extends Entity {
 	
 	protected void setRandomVelocity() {
 		float speed = Globals.getInstance().getLevel().getSpeed();
-	    float targetX = MathUtils.random() * Gdx.graphics.getWidth();
-	    float targetY = MathUtils.random() * Gdx.graphics.getHeight();
+	    float targetX = MathUtils.random(0, Gdx.graphics.getWidth() - width);
+	    float targetY = -height;
 	    float angle = MathUtils.atan2(targetY, targetX);
 	    vx = speed * MathUtils.cos(angle);
-	    vy = speed * MathUtils.sin(angle);
+	    vy = Math.abs(speed * MathUtils.sin(angle));
 	}
 }

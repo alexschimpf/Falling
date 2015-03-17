@@ -1,6 +1,6 @@
 package core;
 
-import java.awt.geom.Line2D;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.Gdx;
@@ -13,8 +13,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 
 import common.BodyData;
+import common.CollisionListener;
 import common.IDraw;
 import common.IUpdate;
+import common.Line;
 import entity.Entity;
 import entity.EntityFactory;
 import entity.TheEntity;
@@ -23,13 +25,13 @@ import entity.floating.LineEntity;
 
 public class Level implements IUpdate, IDraw {
 
-	protected static final float GRAVITY = -10;
+	protected static final float GRAVITY = 2;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
-	protected static final float MIN_ENTITY_SIZE = Gdx.graphics.getWidth() / 10;
-	protected static final float MAX_ENTITY_SIZE = Gdx.graphics.getWidth() / 3;
+	protected static final float MIN_ENTITY_SIZE = Gdx.graphics.getWidth() / 18;
+	protected static final float MAX_ENTITY_SIZE = Gdx.graphics.getWidth() / 4;
 	
-	protected float speed = 5;
+	protected float speed = 2;
 	protected int entityCount = 0;
 	protected Entity floorEntity;
 	protected TheEntity theEntity;
@@ -37,15 +39,18 @@ public class Level implements IUpdate, IDraw {
 	protected LinkedList<LineEntity> lines = new LinkedList<LineEntity>();	
 	
 	public Level() {
-		theEntity = new TheEntity();
-		theEntity.setUserData();
+		world.setContactListener(new CollisionListener());
 	}
 
 	@Override
 	public boolean update() {
+		world.step(1 / 45.0f, 5, 5);
+		
 		tryBuild();
 		
-		for(Body body : getBodies()) {
+		Iterator<Body> bodyIter = getBodies().iterator();
+		while(bodyIter.hasNext()) {
+			Body body = bodyIter.next();
 			Entity entity = getEntityFromBody(body);
 			if(entity == null) {
 				continue;
@@ -56,9 +61,12 @@ public class Level implements IUpdate, IDraw {
 				
 				if(entity instanceof FloatingEntity && !(entity instanceof LineEntity)) {
 					entityCount--;
+				} else if(entity instanceof LineEntity) {
+					lines.remove((LineEntity)entity);
 				}
-					
-			}
+				
+				bodyIter.remove();
+			}	
 		}
 		
 		return false;
@@ -70,22 +78,43 @@ public class Level implements IUpdate, IDraw {
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		drawEntities(spriteBatch, shapeRenderer);
-		drawLines(spriteBatch, shapeRenderer);
+		//drawEntities(spriteBatch, shapeRenderer);
+	}
+	
+	public void reset() {
+		world.dispose();
+		lines.clear();
+		entityCount = 0;
+		speed = 1;
+		
+		world = new World(new Vector2(0, GRAVITY), true);
+		world.setContactListener(new CollisionListener());
+		
+		floorEntity = null;
+		initTheEntity();
+	}
+	
+	public void initTheEntity() {
+		theEntity = new TheEntity();
+		theEntity.setUserData();
 	}
 	
 	public void addLine(LineEntity line) {
 		lines.add(line);
 	}
 	
-	public boolean lineIntersectsExisting(Line2D line) {
-		for(LineEntity lineEntity : lines) {
-			if(lineEntity.intersectsLine(line)) {
-				return true;
+	public boolean isLineValid(Line line) {
+		Iterator<Body> bodyIter = getBodies().iterator();
+		while(bodyIter.hasNext()) {
+			Body body = bodyIter.next();
+			Entity entity = getEntityFromBody(body);
+			
+			if(!(entity instanceof LineEntity) && line.intersectsEntity(entity)) {
+				return false;
 			}
 		}
 		
-		return false;
+		return true;
 	}
 	
 	public Array<Body> getBodies() {
@@ -114,7 +143,7 @@ public class Level implements IUpdate, IDraw {
 		float screenWidth = Gdx.graphics.getWidth();
 		float screenHeight = Gdx.graphics.getHeight();
 		
-		float levelFloor = Gdx.graphics.getHeight();
+		float levelFloor = MathUtils.random(screenHeight / 2, screenHeight - MAX_ENTITY_SIZE);
 		if(entityCount > 0) {
 			levelFloor = floorEntity.getY(true) + floorEntity.getHeight(true);
 		}
@@ -122,7 +151,7 @@ public class Level implements IUpdate, IDraw {
 		float tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 		float tryHeight;	
 		float currX = MathUtils.random(0, screenWidth - MAX_ENTITY_SIZE);
-		float currY = levelFloor + MathUtils.random(MIN_ENTITY_SIZE * 2, screenHeight * 0.75f);
+		float currY = levelFloor + MathUtils.random(MAX_ENTITY_SIZE, screenHeight * 0.5f);
 		while(entityCount <= MAX_ENTITY_COUNT) {	
 			tryHeight = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 			
@@ -152,7 +181,7 @@ public class Level implements IUpdate, IDraw {
 			} else {
 				tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 				currX = MathUtils.random(0, screenWidth - tryWidth);
-				currY += MathUtils.random(actualHeight * 2, screenHeight * 0.75f);
+				currY += MathUtils.random(actualHeight, screenHeight * 0.5f);
 			}
 			
 			tryWidth = Math.max(MIN_ENTITY_SIZE, tryWidth);
@@ -164,16 +193,10 @@ public class Level implements IUpdate, IDraw {
 	
 	protected void drawEntities(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		for(Body body : getBodies()) {
-			Entity entity = getEntityFromBody(body);
+			Entity entity = getEntityFromBody(body);		
 			if(entity != null) {
 				entity.draw(spriteBatch, shapeRenderer);
 			}
-		}
-	}
-	
-	protected void drawLines(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		for(LineEntity line : lines) {
-			line.draw(spriteBatch, shapeRenderer);
 		}
 	}
 	
