@@ -1,18 +1,22 @@
 package common;
 
+import com.badlogic.gdx.Gdx;
+
 public class Utils {
 
-	private final static float PIXELS_TO_METERS = 100;
-	
-	public static float convertToMeters(float pixels) {
-		return pixels / PIXELS_TO_METERS;
+	public static float toMetersX(float pixels) {
+		return (pixels * Globals.VIEWPORT_WIDTH) / Gdx.graphics.getWidth();
 	}
 	
-	public static float convertToPixels(float meters) {
-		return meters * PIXELS_TO_METERS;
+	public static float toMetersY(float pixels) {
+		return (pixels * Globals.VIEWPORT_HEIGHT) / Gdx.graphics.getHeight();
 	}
 	
-	public static float getDistance(float x1, float y1, float x2, float y2) {
-		return (float)Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+	public static float toPixelsX(float meters) {
+		return (meters * Gdx.graphics.getWidth()) / Globals.VIEWPORT_WIDTH;
+	}
+	
+	public static float toPixelsY(float meters) {
+		return (meters * Gdx.graphics.getHeight()) / Globals.VIEWPORT_HEIGHT;
 	}
 }

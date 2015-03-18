@@ -40,6 +40,9 @@ public class InputListener implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		screenX = (int)Utils.toMetersX(screenX);
+		screenY = (int)Utils.toMetersY(screenY);
+
 		if(Globals.getInstance().getState() != State.Running || button != Buttons.LEFT) {
 			return false;
 		}
@@ -51,6 +54,9 @@ public class InputListener implements InputProcessor {
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		screenX = (int)Utils.toMetersX(screenX);
+		screenY = (int)Utils.toMetersY(screenY);
+		
 		if(Globals.getInstance().getState() != State.Running || button != Buttons.LEFT) {
 			return false;
 		}
@@ -63,6 +69,9 @@ public class InputListener implements InputProcessor {
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		screenX = (int)Utils.toMetersX(screenX);
+		screenY = (int)Utils.toMetersY(screenY);
+		
 		if(Globals.getInstance().getState() != State.Running) {
 			return false;
 		}

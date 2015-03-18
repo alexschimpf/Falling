@@ -48,7 +48,6 @@ public class Game extends ApplicationAdapter {
 
 		debugMatrix = new Matrix4(Globals.getInstance().getCamera().combined);
 		shapeRenderer.setProjectionMatrix(Globals.getInstance().getCamera().combined);
-		debugMatrix.scale(100.0f, 100.0f, 1.0f);
 		shapeRenderer.begin(ShapeType.Line); 
 		{
 			InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
@@ -60,6 +59,12 @@ public class Game extends ApplicationAdapter {
 			debugRenderer.render(level.getWorld(), debugMatrix);
 		}
 		shapeRenderer.end();
+	}
+	
+	@Override
+	public void resize(int width, int height) {
+        globals.getCamera().viewportHeight = (Globals.VIEWPORT_WIDTH / width) * height;
+        globals.getCamera().update();
 	}
 	
 	private void update() {

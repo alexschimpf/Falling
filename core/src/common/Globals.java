@@ -1,12 +1,14 @@
 package common;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import core.Game;
 import core.Level;
 
 public class Globals {
+	
+	public static final float VIEWPORT_WIDTH = 60.0f;
+	public static final float VIEWPORT_HEIGHT = 100.0f;
 	
 	private State state;
 	private Game game;
@@ -17,7 +19,7 @@ public class Globals {
 
 	private Globals() {
 		camera = new OrthographicCamera();
-		camera.setToOrtho(true, Gdx.app.getGraphics().getWidth(), Gdx.app.getGraphics().getHeight());
+		camera.setToOrtho(true, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 	}
 
 	public static Globals getInstance() {

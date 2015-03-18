@@ -1,6 +1,5 @@
 package entity;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,11 +12,10 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import common.Globals;
 import common.State;
-import common.Utils;
 
 public final class TheEntity extends Entity {
 	
-	private static final float DEFAULT_WIDTH = Gdx.graphics.getWidth() / 40;
+	private static final float DEFAULT_WIDTH = Globals.VIEWPORT_WIDTH / 40;
 	private static final float DEFAULT_HEIGHT = DEFAULT_WIDTH;
 	
 	public TheEntity() {
@@ -25,19 +23,16 @@ public final class TheEntity extends Entity {
 		
 		width = DEFAULT_WIDTH;
 		height = DEFAULT_HEIGHT;	
-		x = MathUtils.random(width, Gdx.graphics.getWidth() - (width * 2));
-		y = MathUtils.random(height, (Gdx.graphics.getHeight() / 2) - height);
 		
-		buildBody();
+		float x = MathUtils.random(width, Globals.VIEWPORT_WIDTH - (width * 2));
+		float y = MathUtils.random(height, (Globals.VIEWPORT_HEIGHT / 2) - height);
+		buildBody(x, y);
 	}
 
 	@Override
 	public boolean update() {
 		super.update();
-		
-		x = Utils.convertToPixels(body.getPosition().x);
-		y = Utils.convertToPixels(body.getPosition().y);
-		
+
 		if(!isInBounds()) {
 			return true;
 		}
@@ -53,15 +48,11 @@ public final class TheEntity extends Entity {
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		shapeRenderer.setColor(Color.BLUE);
-		shapeRenderer.circle(x, y, width);
+		shapeRenderer.circle(getX(), getY(), width);
 	}
 	
 	@Override
-	protected void buildBody() {
-		float x = Utils.convertToMeters(this.x);
-		float y = Utils.convertToMeters(this.y);
-		float width = Utils.convertToMeters(this.width);
-		
+	protected void buildBody(float x, float y) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
@@ -83,12 +74,12 @@ public final class TheEntity extends Entity {
 	}
 	
 	private boolean isInBounds() {
-		float left = x - (width / 2);
+		float left = getX() - (width / 2);
 		float right = left + width;
-		float top = y - (height / 2);
+		float top = getY() - (height / 2);
 		float bottom = top + height;
 		
-		return right >= 0 && left <= Gdx.graphics.getWidth() && 
-			   top <= Gdx.graphics.getHeight() && bottom >= 0;
+		return right >= 0 && left <= Globals.VIEWPORT_WIDTH && 
+			   top <= Globals.VIEWPORT_HEIGHT && bottom >= 0;
 	}
 }

@@ -1,7 +1,6 @@
 package common;
 
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -43,8 +42,8 @@ public class Line {
 		Shape shape = entity.getBody().getFixtureList().get(0).getShape();
 		if(shape instanceof CircleShape) {
 			CircleShape circleShape = (CircleShape)shape;
-			float radius = Utils.convertToPixels(circleShape.getRadius());
-			Vector2 center = new Vector2(entity.getX(true), entity.getY(true));
+			float radius = circleShape.getRadius();
+			Vector2 center = new Vector2(entity.getX(), entity.getY());
 			return Intersector.intersectSegmentCircle(p1, p2, center, radius);
 		} else if(shape instanceof PolygonShape) {
 			return false;

@@ -1,7 +1,5 @@
 package entity.floating;
 
-import java.awt.geom.Line2D;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -13,7 +11,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import common.Globals;
-import common.Utils;
 
 public final class LineEntity extends FloatingEntity {
 
@@ -26,19 +23,17 @@ public final class LineEntity extends FloatingEntity {
 	public LineEntity(float x1, float y1, float x2, float y2) {
 		super();
 		
-		this.x = x1;
-		this.y = y1;
 		this.x2 = x2;
 		this.y2 = y2;
 		
 		float dx = x2 - x1;
 		float dy = y2 - y1;
 		this.width = (float)Math.sqrt((dx * dx) + (dy * dy));		
-		this.height = 1;
+		this.height = 0.5f;
 		
 		setStraightVelocity();
 		
-		buildBody();
+		buildBody(x1, y1);
 		
 		startTime = TimeUtils.millis();
 	}
@@ -46,22 +41,13 @@ public final class LineEntity extends FloatingEntity {
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
 		shapeRenderer.setColor(color, color, color, 1);
-		shapeRenderer.line(x, y, x2, y2);
+		shapeRenderer.line(getX(), getY(), x2, y2);
 	}
 
 	@Override
 	public boolean update() {
 		super.update();
-		
-//		float angle = body.getAngle();
-//		float cX = Utils.convertToPixels(body.getPosition().x);
-//		float cY = Utils.convertToPixels(body.getPosition().y);
-//		float halfLength = width / 2;		
-//		x = cX - (MathUtils.cos(angle) * halfLength);
-//		y = cY - (MathUtils.sin(angle) * halfLength);
-//		x2 = cX + (MathUtils.cos(angle) * halfLength);
-//		y2 = cY + (MathUtils.sin(angle) * halfLength);
-		
+
 		float elapsed = TimeUtils.millis() - startTime;
 		if(elapsed > LIFE_TIME) {
 			return true;
@@ -73,14 +59,7 @@ public final class LineEntity extends FloatingEntity {
 	}
 	
 	@Override
-	protected void buildBody() {
-		float x1 = Utils.convertToMeters(this.x);
-		float y1 = Utils.convertToMeters(this.y);
-		float x2 = Utils.convertToMeters(this.x2);
-		float y2 = Utils.convertToMeters(this.y2);
-		float width = Utils.convertToMeters(this.width);
-		float height = Utils.convertToMeters(this.height);
-		
+	protected void buildBody(float x1, float y1) {
 		float dx = x2 - x1;
 		float dy = y2 - y1;	
 		float angle = MathUtils.atan2(dy, dx);
@@ -105,5 +84,13 @@ public final class LineEntity extends FloatingEntity {
 		body.createFixture(fDef);
 		
 		shape.dispose();
+	}
+	
+	public float getX2() {
+		return x2;
+	}
+	
+	public float getY2() {
+		return y2;
 	}
 }

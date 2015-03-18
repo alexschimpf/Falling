@@ -3,7 +3,6 @@ package core;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.utils.Array;
 
 import common.BodyData;
 import common.CollisionListener;
+import common.Globals;
 import common.IDraw;
 import common.IUpdate;
 import common.Line;
@@ -25,13 +25,14 @@ import entity.floating.LineEntity;
 
 public class Level implements IUpdate, IDraw {
 
-	protected static final float GRAVITY = 2;
+	protected static final float GRAVITY = 10;
+	protected static final float DEFAULT_SPEED = 5;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
-	protected static final float MIN_ENTITY_SIZE = Gdx.graphics.getWidth() / 18;
-	protected static final float MAX_ENTITY_SIZE = Gdx.graphics.getWidth() / 4;
+	protected static final float MIN_ENTITY_SIZE = Globals.VIEWPORT_WIDTH / 18;
+	protected static final float MAX_ENTITY_SIZE = Globals.VIEWPORT_WIDTH / 3;
 	
-	protected float speed = 2;
+	protected float speed = DEFAULT_SPEED;
 	protected int entityCount = 0;
 	protected Entity floorEntity;
 	protected TheEntity theEntity;
@@ -85,7 +86,7 @@ public class Level implements IUpdate, IDraw {
 		world.dispose();
 		lines.clear();
 		entityCount = 0;
-		speed = 1;
+		speed = DEFAULT_SPEED;
 		
 		world = new World(new Vector2(0, GRAVITY), true);
 		world.setContactListener(new CollisionListener());
@@ -140,12 +141,12 @@ public class Level implements IUpdate, IDraw {
 			return;
 		}
 		
-		float screenWidth = Gdx.graphics.getWidth();
-		float screenHeight = Gdx.graphics.getHeight();
+		float screenWidth = Globals.VIEWPORT_WIDTH;
+		float screenHeight = Globals.VIEWPORT_HEIGHT;
 		
 		float levelFloor = MathUtils.random(screenHeight / 2, screenHeight - MAX_ENTITY_SIZE);
 		if(entityCount > 0) {
-			levelFloor = floorEntity.getY(true) + floorEntity.getHeight(true);
+			levelFloor = floorEntity.getY() + floorEntity.getHeight();
 		}
 		
 		float tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
@@ -160,8 +161,8 @@ public class Level implements IUpdate, IDraw {
 			
 			floorEntity = entity;
 			
-			float actualWidth = entity.getWidth(true);
-			float actualHeight = entity.getHeight(true);		
+			float actualWidth = entity.getWidth();
+			float actualHeight = entity.getHeight();		
 			if(MathUtils.random() < 0.2f) {
 				currY += MathUtils.random(0, actualHeight);
 				

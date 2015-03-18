@@ -1,6 +1,4 @@
 package entity.floating;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 
 import common.Globals;
@@ -14,10 +12,10 @@ public abstract class FloatingEntity extends Entity {
 	public FloatingEntity(float x, float y, float width, float height) {
 		super();
 		
-		this.x = x;
-		this.y = y;
 		this.width = width;
 		this.height = height;
+		
+		buildBody(x, y);
 	}
 	
 	public FloatingEntity() {
@@ -28,11 +26,11 @@ public abstract class FloatingEntity extends Entity {
 	public boolean update() {
 		body.setLinearVelocity(vx, -vy);
 		
-		return super.update() || getY(true) + getHeight(true) <= 0;
+		return super.update() || getY() + getHeight() <= 0;
 	}
 	
 	@Override
-	protected void buildBody() {
+	protected void buildBody(float x, float y) {
 	}
 	
 	protected void setStraightVelocity() {
@@ -42,7 +40,7 @@ public abstract class FloatingEntity extends Entity {
 	
 	protected void setRandomVelocity() {
 		float speed = Globals.getInstance().getLevel().getSpeed();
-	    float targetX = MathUtils.random(0, Gdx.graphics.getWidth() - width);
+	    float targetX = MathUtils.random(0, Globals.VIEWPORT_WIDTH - width);
 	    float targetY = -height;
 	    float angle = MathUtils.atan2(targetY, targetX);
 	    vx = speed * MathUtils.cos(angle);
