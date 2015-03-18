@@ -8,6 +8,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 import entity.Entity;
+import entity.TheEntity;
+import entity.floating.FatalEntity;
 
 public class CollisionListener implements ContactListener {
 
@@ -25,6 +27,19 @@ public class CollisionListener implements ContactListener {
 		BodyData dataB = (BodyData)bodyB.getUserData();
 		Entity entityA = dataA.getEntity();
 		Entity entityB = dataB.getEntity();
+		
+		boolean theEntity = entityA instanceof TheEntity || entityB instanceof TheEntity;
+		boolean fatal = entityA instanceof FatalEntity || entityB instanceof FatalEntity;
+		if(theEntity && fatal) {
+			TheEntity theEntityObj;
+			if(entityA instanceof TheEntity) {
+				theEntityObj = (TheEntity)entityA;
+			} else {
+				theEntityObj = (TheEntity)entityB;
+			}
+			
+			theEntityObj.done();
+		}
 	}
 
 	@Override

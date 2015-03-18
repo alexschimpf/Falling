@@ -21,8 +21,6 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		//shapeRenderer.setColor(Color.GREEN);
-		//shapeRenderer.box(x, y, 0, width, height, 0);
 	}
 	
 	@Override

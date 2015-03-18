@@ -79,7 +79,7 @@ public class Level implements IUpdate, IDraw {
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		//drawEntities(spriteBatch, shapeRenderer);
+		drawEntities(spriteBatch, shapeRenderer);
 	}
 	
 	public void reset() {

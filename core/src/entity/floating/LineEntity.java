@@ -1,7 +1,5 @@
 package entity.floating;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,12 +34,6 @@ public final class LineEntity extends FloatingEntity {
 		buildBody(x1, y1);
 		
 		startTime = TimeUtils.millis();
-	}
-	
-	@Override
-	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		shapeRenderer.setColor(color, color, color, 1);
-		shapeRenderer.line(getX(), getY(), x2, y2);
 	}
 
 	@Override

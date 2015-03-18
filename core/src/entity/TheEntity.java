@@ -47,8 +47,8 @@ public final class TheEntity extends Entity {
 	
 	@Override
 	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		shapeRenderer.setColor(Color.BLUE);
-		shapeRenderer.circle(getX(), getY(), width);
+//		shapeRenderer.setColor(Color.GREEN);
+//		shapeRenderer.circle(getX(), getY(), width);
 	}
 	
 	@Override

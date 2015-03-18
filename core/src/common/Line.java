@@ -53,14 +53,7 @@ public class Line {
 			} else if(shape instanceof PolygonShape) {
 				PolygonShape polygonShape = (PolygonShape)shape;
 				
-				Vector2 vertex = new Vector2();
-				float[] vertices = new float[polygonShape.getVertexCount() * 2];
-				for(int i = 0; i < polygonShape.getVertexCount(); i++) {
-					polygonShape.getVertex(i, vertex);
-					vertex = body.getWorldPoint(vertex);
-					vertices[i * 2] = vertex.x;
-					vertices[(i * 2) + 1] = vertex.y;
-				}
+				float[] vertices = Utils.getWorldVertices(body, polygonShape);
 				Polygon polygon = new Polygon(vertices);
 				
 				return Intersector.intersectSegmentPolygon(p1, p2, polygon);

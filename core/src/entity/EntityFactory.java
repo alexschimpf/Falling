@@ -1,5 +1,8 @@
 package entity;
 
+import com.badlogic.gdx.math.MathUtils;
+
+import entity.floating.FatalEntity;
 import entity.floating.FloatingEntity;
 import entity.floating.NeutralEntity;
 
@@ -11,6 +14,10 @@ public final class EntityFactory {
 	 * However, certain entities may choose to use their own custom width and height.
 	 */
 	public static FloatingEntity getRandomFloatingEntity(float x, float y, float tryWidth, float tryHeight) {
-		return new NeutralEntity(x, y, tryWidth, tryHeight);
+		if(MathUtils.random() < .3) {
+			return new FatalEntity(x, y, tryWidth, tryHeight);
+		} else {
+			return new NeutralEntity(x, y, tryWidth, tryHeight);
+		}
 	}
 }
