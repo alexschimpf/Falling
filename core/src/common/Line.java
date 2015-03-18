@@ -1,8 +1,11 @@
 package common;
 
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
@@ -39,31 +42,29 @@ public class Line {
 	}
 
 	public boolean intersectsEntity(Entity entity) {
-		Shape shape = entity.getBody().getFixtureList().get(0).getShape();
-		if(shape instanceof CircleShape) {
-			CircleShape circleShape = (CircleShape)shape;
-			float radius = circleShape.getRadius();
-			Vector2 center = new Vector2(entity.getX(), entity.getY());
-			return Intersector.intersectSegmentCircle(p1, p2, center, radius);
-		} else if(shape instanceof PolygonShape) {
-			return false;
-//			PolygonShape polygonShape = (PolygonShape)shape;
-//			
-//			String verts = "";
-//			float[] vertices = new float[polygonShape.getVertexCount() * 2];
-//			for(int i = 0; i < polygonShape.getVertexCount(); i++) {
-//				Vector2 vertex = new Vector2();
-//				polygonShape.getVertex(i, vertex);
-//				vertices[i * 2] = Utils.convertToPixels(vertex.x);
-//				vertices[(i * 2) + 1] = Utils.convertToPixels(vertex.y);
-//				
-//				verts += "(" + vertices[i * 2] + ", " + vertices[(i * 2) + 1] + "), ";
-//			}
-//			Polygon polygon = new Polygon(vertices);
-//			
-//			System.out.println("line: " + p1.x + ", " + p1.y + " to " + p2.x + ", " + p2.y);
-//			System.out.println("verts: " + verts);
-//			return Intersector.intersectSegmentPolygon(p1, p2, polygon);
+		Body body = entity.getBody();
+		for(Fixture fixture : body.getFixtureList()) {
+			Shape shape = fixture.getShape();
+			if(shape instanceof CircleShape) {
+				CircleShape circleShape = (CircleShape)shape;
+				float radius = circleShape.getRadius();
+				Vector2 center = new Vector2(entity.getX(), entity.getY());
+				return Intersector.intersectSegmentCircle(p1, p2, center, radius);
+			} else if(shape instanceof PolygonShape) {
+				PolygonShape polygonShape = (PolygonShape)shape;
+				
+				Vector2 vertex = new Vector2();
+				float[] vertices = new float[polygonShape.getVertexCount() * 2];
+				for(int i = 0; i < polygonShape.getVertexCount(); i++) {
+					polygonShape.getVertex(i, vertex);
+					vertex = body.getWorldPoint(vertex);
+					vertices[i * 2] = vertex.x;
+					vertices[(i * 2) + 1] = vertex.y;
+				}
+				Polygon polygon = new Polygon(vertices);
+				
+				return Intersector.intersectSegmentPolygon(p1, p2, polygon);
+			}
 		}
 		
 		return false;
