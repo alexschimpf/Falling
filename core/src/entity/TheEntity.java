@@ -25,7 +25,7 @@ public final class TheEntity extends Entity {
 		height = DEFAULT_HEIGHT;	
 		
 		float x = MathUtils.random(width, Globals.VIEWPORT_WIDTH - (width * 2));
-		float y = MathUtils.random(height, (Globals.VIEWPORT_HEIGHT / 2) - height);
+		float y = MathUtils.random(height, (Globals.VIEWPORT_HEIGHT / 3) - height);
 		buildBody(x, y);
 	}
 
