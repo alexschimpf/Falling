@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import core.Game;
 import core.Level;
+import entity.TheEntity;
 
 public class Globals {
 	
@@ -18,8 +19,7 @@ public class Globals {
 	private static Globals instance;
 
 	private Globals() {
-		camera = new OrthographicCamera();
-		camera.setToOrtho(true, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+		resetCamera();
 	}
 
 	public static Globals getInstance() {
@@ -33,6 +33,25 @@ public class Globals {
 	public void initLevel() {
 		level = new Level();
 		level.initTheEntity();
+	}
+	
+	public void resetCamera() {
+		camera = new OrthographicCamera();
+		camera.setToOrtho(true, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+	}
+	
+	public void updateCamera() {	
+		if(state == State.Running) {
+			TheEntity theEntity = level.getTheEntity();
+			float theEntitySpeed = theEntity.getBody().getLinearVelocity().y / 50;
+			camera.translate(0, Math.max(theEntitySpeed, level.getSpeed()));
+			
+			if(theEntity.getY() + (theEntity.getHeight() * 2) > Utils.getCameraBottom()) {
+				camera.translate(0, Globals.VIEWPORT_HEIGHT / 2);
+			}
+		}
+
+		camera.update();
 	}
 	
 	public Game getGame() {

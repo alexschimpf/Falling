@@ -1,7 +1,6 @@
 package entity.floating;
-import com.badlogic.gdx.math.MathUtils;
 
-import common.Globals;
+import common.Utils;
 import entity.Entity;
 
 public abstract class FloatingEntity extends Entity {
@@ -26,24 +25,10 @@ public abstract class FloatingEntity extends Entity {
 	public boolean update() {
 		body.setLinearVelocity(vx, -vy);
 		
-		return super.update() || getY() + getHeight() <= 0;
+		return super.update() || getY() + height < Utils.getCameraTop();
 	}
 	
 	@Override
 	protected void buildBody(float x, float y) {
-	}
-	
-	protected void setStraightVelocity() {
-		vx = 0;
-		vy = Globals.getInstance().getLevel().getSpeed();
-	}
-	
-	protected void setRandomVelocity() {
-		float speed = Globals.getInstance().getLevel().getSpeed();
-	    float targetX = MathUtils.random(0, Globals.VIEWPORT_WIDTH - width);
-	    float targetY = -height;
-	    float angle = MathUtils.atan2(targetY, targetX);
-	    vx = speed * MathUtils.cos(angle);
-	    vy = Math.abs(speed * MathUtils.sin(angle));
 	}
 }

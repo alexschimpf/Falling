@@ -6,7 +6,5 @@ public abstract class CollectableEntity extends FloatingEntity {
 
 	public CollectableEntity() {
 		super();
-		
-		setRandomVelocity();
 	}
 }

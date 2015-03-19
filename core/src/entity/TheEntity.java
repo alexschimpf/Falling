@@ -1,6 +1,5 @@
 package entity;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import common.Globals;
 import common.State;
+import common.Utils;
 
 public final class TheEntity extends Entity {
 	
@@ -33,7 +33,7 @@ public final class TheEntity extends Entity {
 	public boolean update() {
 		super.update();
 
-		if(!isInBounds()) {
+		if(getY() + height < Utils.getCameraTop()) {
 			return true;
 		}
 		
@@ -42,7 +42,7 @@ public final class TheEntity extends Entity {
 
 	@Override
 	public void done() {
-		Globals.getInstance().setState(State.GameOver);
+		globals.setState(State.GameOver);
 	}
 	
 	@Override
@@ -57,7 +57,7 @@ public final class TheEntity extends Entity {
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
 
-		World world = Globals.getInstance().getLevel().getWorld();
+		World world = globals.getLevel().getWorld();
 		body = world.createBody(bodyDef);
 
 		CircleShape circleShape = new CircleShape();
@@ -71,15 +71,5 @@ public final class TheEntity extends Entity {
 		body.createFixture(fixtureDef);
 
 		circleShape.dispose();
-	}
-	
-	private boolean isInBounds() {
-		float left = getX() - (width / 2);
-		float right = left + width;
-		float top = getY() - (height / 2);
-		float bottom = top + height;
-		
-		return right >= 0 && left <= Globals.VIEWPORT_WIDTH && 
-			   top <= Globals.VIEWPORT_HEIGHT && bottom >= 0;
 	}
 }

@@ -7,20 +7,24 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public final class Utils {
 
+	private static Globals globals = Globals.getInstance();
+	
 	public static float toMetersX(float pixels) {
-		return (pixels * Globals.VIEWPORT_WIDTH) / Gdx.graphics.getWidth();
+		float cameraX = globals.getCamera().position.x - (Globals.VIEWPORT_WIDTH / 2);
+		return cameraX + (pixels * Globals.VIEWPORT_WIDTH) / Gdx.graphics.getWidth();
 	}
 	
 	public static float toMetersY(float pixels) {
-		return (pixels * Globals.VIEWPORT_HEIGHT) / Gdx.graphics.getHeight();
+		float cameraY = globals.getCamera().position.y - (Globals.VIEWPORT_HEIGHT/ 2);
+		return cameraY + (pixels * Globals.VIEWPORT_HEIGHT) / Gdx.graphics.getHeight();
 	}
 	
-	public static float toPixelsX(float meters) {
-		return (meters * Gdx.graphics.getWidth()) / Globals.VIEWPORT_WIDTH;
+	public static float getCameraTop() {
+		return globals.getCamera().position.y - (Globals.VIEWPORT_HEIGHT / 2);
 	}
 	
-	public static float toPixelsY(float meters) {
-		return (meters * Gdx.graphics.getHeight()) / Globals.VIEWPORT_HEIGHT;
+	public static float getCameraBottom() {
+		return globals.getCamera().position.y + (Globals.VIEWPORT_HEIGHT / 2);
 	}
 	
 	public static float[] getLocalVertices(PolygonShape shape) {

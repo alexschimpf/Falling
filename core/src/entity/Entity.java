@@ -13,6 +13,7 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	protected float width, height;
 	protected Body body;
+	protected Globals globals = Globals.getInstance();
 
 	public Entity() {		
 	}
@@ -25,6 +26,10 @@ public abstract class Entity implements IUpdate, IDraw {
 	
 	@Override
 	public boolean update() {
+		float vx = body.getLinearVelocity().x;
+		float vy = body.getLinearVelocity().y;
+		body.setLinearVelocity(vx, Math.min(vy, 25));
+		
 		return false;
 	}
 	

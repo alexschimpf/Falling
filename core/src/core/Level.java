@@ -8,7 +8,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 
 import common.BodyData;
@@ -17,6 +22,7 @@ import common.Globals;
 import common.IDraw;
 import common.IUpdate;
 import common.Line;
+import common.Utils;
 import entity.Entity;
 import entity.EntityFactory;
 import entity.TheEntity;
@@ -25,8 +31,8 @@ import entity.floating.LineEntity;
 
 public class Level implements IUpdate, IDraw {
 
-	protected static final float GRAVITY = 10;
-	protected static final float DEFAULT_SPEED = 5;
+	protected static final float GRAVITY = 8;
+	protected static final float DEFAULT_SPEED = 0.28f;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
 	protected static final float MIN_ENTITY_SIZE = Globals.VIEWPORT_WIDTH / 18;
@@ -34,6 +40,8 @@ public class Level implements IUpdate, IDraw {
 	
 	protected float speed = DEFAULT_SPEED;
 	protected int entityCount = 0;
+	protected Body leftWall;
+	protected Body rightWall;
 	protected Entity floorEntity;
 	protected TheEntity theEntity;
 	protected World world = new World(new Vector2(0, GRAVITY), true);
@@ -41,10 +49,16 @@ public class Level implements IUpdate, IDraw {
 	
 	public Level() {
 		world.setContactListener(new CollisionListener());
+		
+		leftWall = buildSideWallBody(true);
+		rightWall = buildSideWallBody(false);
 	}
 
 	@Override
 	public boolean update() {
+		leftWall.setTransform(leftWall.getPosition().x, Utils.getCameraTop(), leftWall.getAngle());
+		rightWall.setTransform(rightWall.getPosition().x, Utils.getCameraTop(), rightWall.getAngle());
+		
 		world.step(1 / 45.0f, 5, 5);
 		
 		tryBuild();
@@ -88,8 +102,13 @@ public class Level implements IUpdate, IDraw {
 		entityCount = 0;
 		speed = DEFAULT_SPEED;
 		
+		Globals.getInstance().resetCamera();
+		
 		world = new World(new Vector2(0, GRAVITY), true);
 		world.setContactListener(new CollisionListener());
+		
+		leftWall = buildSideWallBody(true);
+		rightWall = buildSideWallBody(false);
 		
 		floorEntity = null;
 		initTheEntity();
@@ -98,6 +117,7 @@ public class Level implements IUpdate, IDraw {
 	public void initTheEntity() {
 		theEntity = new TheEntity();
 		theEntity.setUserData();
+		theEntity.getBody().setLinearVelocity(0, 10);
 	}
 	
 	public void addLine(LineEntity line) {
@@ -109,6 +129,9 @@ public class Level implements IUpdate, IDraw {
 		while(bodyIter.hasNext()) {
 			Body body = bodyIter.next();
 			Entity entity = getEntityFromBody(body);
+			if(entity == null) {
+				continue;
+			}
 			
 			if(!(entity instanceof LineEntity) && line.intersectsEntity(entity)) {
 				return false;
@@ -149,10 +172,11 @@ public class Level implements IUpdate, IDraw {
 			levelFloor = floorEntity.getY() + floorEntity.getHeight();
 		}
 		
+		boolean lastPlacedClose = false;
 		float tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 		float tryHeight;	
 		float currX = MathUtils.random(0, screenWidth - MAX_ENTITY_SIZE);
-		float currY = levelFloor + MathUtils.random(MAX_ENTITY_SIZE, screenHeight * 0.5f);
+		float currY = levelFloor + MathUtils.random(MAX_ENTITY_SIZE * 2, screenHeight * 0.5f);
 		while(entityCount <= MAX_ENTITY_COUNT) {	
 			tryHeight = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 			
@@ -163,26 +187,28 @@ public class Level implements IUpdate, IDraw {
 			
 			float actualWidth = entity.getWidth();
 			float actualHeight = entity.getHeight();		
-			if(MathUtils.random() < 0.2f) {
-				currY += MathUtils.random(0, actualHeight);
+			if(!lastPlacedClose && MathUtils.random() < 0.3f) {
+				lastPlacedClose = true;
+				currY += MathUtils.random(actualHeight / 2, actualHeight);
 				
 				float newX;
 				float leftSpace = currX;
 				float rightSpace = screenWidth - (currX + actualWidth);				
 				if(leftSpace > rightSpace) {
-					newX = currX - MathUtils.random(leftSpace / 4, leftSpace);
+					newX = currX - MathUtils.random(leftSpace / 4, leftSpace - MIN_ENTITY_SIZE);
 				} else {
-					newX = currX + actualWidth + MathUtils.random(rightSpace / 4, rightSpace);
+					newX = currX + actualWidth + MathUtils.random(rightSpace / 4, rightSpace - MIN_ENTITY_SIZE);
 				}
 				
 				float space = Math.abs(currX - newX);
 				tryWidth = MathUtils.random(space / 4, space / 2);
 				
-				currX = newX;
+				currX = Math.max(newX, MIN_ENTITY_SIZE);
 			} else {
+				lastPlacedClose = false;
 				tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
-				currX = MathUtils.random(0, screenWidth - tryWidth);
-				currY += MathUtils.random(actualHeight, screenHeight * 0.5f);
+				currX = MathUtils.random(MIN_ENTITY_SIZE, screenWidth - tryWidth);
+				currY += MathUtils.random(actualHeight + MIN_ENTITY_SIZE, screenHeight * 0.5f);
 			}
 			
 			tryWidth = Math.max(MIN_ENTITY_SIZE, tryWidth);
@@ -208,5 +234,28 @@ public class Level implements IUpdate, IDraw {
 		}
 		
 		return ((BodyData)body.getUserData()).getEntity();
+	}
+	
+	protected Body buildSideWallBody(boolean left) {
+		float x = left ? -5.5f : Globals.VIEWPORT_WIDTH + 5.5f; 
+	
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyType.StaticBody;
+		bodyDef.position.set(x, 0);
+
+		Body body = world.createBody(bodyDef);
+		body.setBullet(true);
+
+		PolygonShape shape = new PolygonShape();
+		shape.setAsBox(5, Globals.VIEWPORT_HEIGHT);
+
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 0;
+		fixtureDef.friction = 0;
+		fixtureDef.restitution = 0.5f;
+		body.createFixture(fixtureDef);
+
+		return body;
 	}
 }

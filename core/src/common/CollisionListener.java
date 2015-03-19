@@ -25,6 +25,10 @@ public class CollisionListener implements ContactListener {
 		Body bodyB = fixB.getBody();
 		BodyData dataA = (BodyData)bodyA.getUserData();
 		BodyData dataB = (BodyData)bodyB.getUserData();
+		if(dataA == null || dataB == null) {
+			return;
+		}
+		
 		Entity entityA = dataA.getEntity();
 		Entity entityB = dataB.getEntity();
 		

@@ -7,8 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import common.Globals;
+import common.Utils;
 
 public final class LineEntity extends FloatingEntity {
 
@@ -28,9 +27,7 @@ public final class LineEntity extends FloatingEntity {
 		float dy = y2 - y1;
 		this.width = (float)Math.sqrt((dx * dx) + (dy * dy));		
 		this.height = 0.5f;
-		
-		setStraightVelocity();
-		
+
 		buildBody(x1, y1);
 		
 		startTime = TimeUtils.millis();
@@ -47,7 +44,7 @@ public final class LineEntity extends FloatingEntity {
 		
 		color = elapsed / LIFE_TIME;
 		
-		return false;
+		return Math.max(getY(), y2) < Utils.getCameraTop();
 	}
 	
 	@Override
@@ -60,9 +57,9 @@ public final class LineEntity extends FloatingEntity {
 		float cY = (y1 + y2) / 2;
 		
 		BodyDef bDef = new BodyDef();
-		bDef.type = BodyType.KinematicBody;
+		bDef.type = BodyType.StaticBody;
 		bDef.position.set(cX, cY);
-		body = Globals.getInstance().getLevel().getWorld().createBody(bDef);			
+		body = globals.getLevel().getWorld().createBody(bDef);			
 		
 		Vector2 center = new Vector2(0, 0);
 		PolygonShape shape = new PolygonShape();

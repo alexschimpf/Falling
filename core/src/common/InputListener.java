@@ -13,6 +13,7 @@ public class InputListener implements InputProcessor {
 	private boolean isLineAnchored = false;
 	private Color lineColor = Color.WHITE;
 	private Line line = new Line();
+	private float cameraTop;
 	
 	public InputListener() {
 	}
@@ -48,6 +49,8 @@ public class InputListener implements InputProcessor {
 		}
 		
         updateLine(screenX, screenY);
+        line.setDy1();
+        line.setDy2();
 		
 		return true;
 	}
@@ -77,6 +80,7 @@ public class InputListener implements InputProcessor {
 		}
 		
 		updateLine(screenX, screenY);
+		line.setDy2();
 
 		return true;
 	}
@@ -111,14 +115,29 @@ public class InputListener implements InputProcessor {
 		}
 	}
 	
+	public void updateLine() {
+		updateLine(0, 0, false);
+	}
+	
 	private void updateLine(float x, float y) {
+		updateLine(x, y, true);
+	}
+ 	
+	private void updateLine(float x, float y, boolean fromTouchEvent) {
 		if(isLineAnchored) {
+			if(!fromTouchEvent) {
+				x = (int)Utils.toMetersX(Gdx.input.getX());
+				y = (int)Utils.toMetersY(Gdx.input.getY());	
+			}
+			
 			line.setLine(line.x1, line.y1, x, y);
 		} else {
 			line.setLine(x, y, x, y);
 		}
 		
-		isLineAnchored = true;
+		if(fromTouchEvent) {
+		  isLineAnchored = true;
+		}
 	}
 	
 	private void tryBuildLine(float x, float y) {
@@ -128,14 +147,14 @@ public class InputListener implements InputProcessor {
 		}
 			
 		updateLine(x, y);	
-		LineEntity lineEntity = new LineEntity(line.x1, line.y1, line.x2, line.y2);
+		LineEntity lineEntity = new LineEntity(line.x1, Utils.getCameraTop() + line.getDy1(), line.x2, Utils.getCameraTop() + line.getDy2());
 		lineEntity.setUserData();
 		Globals.getInstance().getLevel().addLine(lineEntity);
 	}
 	
 	private void eraseLine() {
 		isLineAnchored = false;
-		line.setLine(0, 0, 0, 0);
+		line.erase();
 	}
 }
 

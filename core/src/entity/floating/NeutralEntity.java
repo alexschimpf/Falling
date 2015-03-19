@@ -15,14 +15,12 @@ public class NeutralEntity extends FloatingEntity {
 
 	public NeutralEntity(float x, float y, float width, float height) {
 		super(x, y, width, height);
-		
-		setStraightVelocity();
 	}
 	
 	@Override 
 	protected void buildBody(float x, float y) {
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.KinematicBody;
+		bodyDef.type = BodyType.StaticBody;
 		bodyDef.position.set(x, y);
 
 		World world = Globals.getInstance().getLevel().getWorld();

@@ -14,7 +14,7 @@ public final class EntityFactory {
 	 * However, certain entities may choose to use their own custom width and height.
 	 */
 	public static FloatingEntity getRandomFloatingEntity(float x, float y, float tryWidth, float tryHeight) {
-		if(MathUtils.random() < .3) {
+		if(MathUtils.random() < .35) {
 			return new FatalEntity(x, y, tryWidth, tryHeight);
 		} else {
 			return new NeutralEntity(x, y, tryWidth, tryHeight);

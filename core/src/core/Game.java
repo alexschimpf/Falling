@@ -51,9 +51,7 @@ public class Game extends ApplicationAdapter {
 		shapeRenderer.begin(ShapeType.Line); 
 		{
 			InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
-			Line line = inputListener.getLine();
-			shapeRenderer.setColor(inputListener.getLineColor());
-			shapeRenderer.line(line.x1, line.y1, line.x2, line.y2);
+			inputListener.getLine().draw(spriteBatch, shapeRenderer);
 			draw(spriteBatch, shapeRenderer);
 			
 			debugRenderer.render(level.getWorld(), debugMatrix);
@@ -68,8 +66,10 @@ public class Game extends ApplicationAdapter {
 	}
 	
 	private void update() {
-		globals.getCamera().update();
-		((InputListener)Gdx.input.getInputProcessor()).checkLineValidity();
+		globals.updateCamera();
+		InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
+		inputListener.updateLine();
+		inputListener.checkLineValidity();
 		
 		switch(globals.getState()) {
 			case Loading:
