@@ -5,7 +5,10 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Frustum;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -177,27 +180,30 @@ public class Level implements IUpdate, IDraw {
 		float tryHeight;	
 		float currX = MathUtils.random(0, screenWidth - MAX_ENTITY_SIZE);
 		float currY = levelFloor + MathUtils.random(MAX_ENTITY_SIZE * 2, screenHeight * 0.5f);
+		FloatingEntity entity = null;
 		while(entityCount <= MAX_ENTITY_COUNT) {	
 			tryHeight = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 			
-			FloatingEntity entity = EntityFactory.getRandomFloatingEntity(currX, currY, tryWidth, tryHeight);
+			entity = EntityFactory.getRandomFloatingEntity(currX, currY, tryWidth, tryHeight);
 			entity.setUserData();
-			
+			entityCount++;
+
 			floorEntity = entity;
 			
 			float actualWidth = entity.getWidth();
-			float actualHeight = entity.getHeight();		
-			if(!lastPlacedClose && MathUtils.random() < 0.3f) {
+			float actualHeight = entity.getHeight();	
+	
+			if(!lastPlacedClose && MathUtils.random() < 0.4f) {
 				lastPlacedClose = true;
-				currY += MathUtils.random(actualHeight / 2, actualHeight);
+				currY += MathUtils.random(actualHeight, actualHeight * 2);
 				
 				float newX;
 				float leftSpace = currX;
 				float rightSpace = screenWidth - (currX + actualWidth);				
 				if(leftSpace > rightSpace) {
-					newX = currX - MathUtils.random(leftSpace / 4, leftSpace - MIN_ENTITY_SIZE);
+					newX = MathUtils.random(MAX_ENTITY_SIZE, leftSpace / 2);
 				} else {
-					newX = currX + actualWidth + MathUtils.random(rightSpace / 4, rightSpace - MIN_ENTITY_SIZE);
+					newX = Globals.VIEWPORT_WIDTH - MathUtils.random(MAX_ENTITY_SIZE, rightSpace / 2);
 				}
 				
 				float space = Math.abs(currX - newX);
@@ -213,8 +219,6 @@ public class Level implements IUpdate, IDraw {
 			
 			tryWidth = Math.max(MIN_ENTITY_SIZE, tryWidth);
 			tryHeight = Math.max(MIN_ENTITY_SIZE, tryHeight);
-			
-			entityCount++;
 		}
 	}
 	
@@ -235,7 +239,7 @@ public class Level implements IUpdate, IDraw {
 		
 		return ((BodyData)body.getUserData()).getEntity();
 	}
-	
+
 	protected Body buildSideWallBody(boolean left) {
 		float x = left ? -5.5f : Globals.VIEWPORT_WIDTH + 5.5f; 
 	

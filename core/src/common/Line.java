@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
@@ -79,6 +80,11 @@ public class Line implements IDraw{
 	}
 
 	public boolean intersectsEntity(Entity entity) {
+		Frustum frustum = Globals.getInstance().getCamera().frustum;
+		if(!frustum.boundsInFrustum(entity.getX(), entity.getY(), 0, entity.getWidth() / 2, entity.getHeight() / 2, 0)) {
+			return false;
+		}
+		
 		Body body = entity.getBody();
 		for(Fixture fixture : body.getFixtureList()) {
 			Shape shape = fixture.getShape();

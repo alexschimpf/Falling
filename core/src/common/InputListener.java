@@ -13,7 +13,6 @@ public class InputListener implements InputProcessor {
 	private boolean isLineAnchored = false;
 	private Color lineColor = Color.WHITE;
 	private Line line = new Line();
-	private float cameraTop;
 	
 	public InputListener() {
 	}
