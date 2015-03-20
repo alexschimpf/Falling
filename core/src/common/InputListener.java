@@ -43,14 +43,16 @@ public final class InputListener implements InputProcessor {
 		screenX = (int)Utils.toMetersX(screenX);
 		screenY = (int)Utils.toMetersY(screenY);
 
-		if(Globals.getInstance().getState() != State.Running || button != Buttons.LEFT) {
-			return false;
+		switch(Globals.getInstance().getState()) {
+			case Running:
+				updateLine(screenX, screenY);
+		        line.setDy1();
+		        line.setDy2();
+		        break;
+			default:
+				break;	
 		}
-		
-        updateLine(screenX, screenY);
-        line.setDy1();
-        line.setDy2();
-		
+
 		return true;
 	}
 
@@ -59,12 +61,17 @@ public final class InputListener implements InputProcessor {
 		screenX = (int)Utils.toMetersX(screenX);
 		screenY = (int)Utils.toMetersY(screenY);
 		
-		if(Globals.getInstance().getState() != State.Running || button != Buttons.LEFT) {
-			return false;
+		switch(Globals.getInstance().getState()) {
+			case Running:
+				tryBuildLine(screenX, screenY);		
+				eraseLine();
+		        break;
+			case GameOver:
+				Globals.getInstance().setState(State.Running);
+				break;
+			default:
+				break;	
 		}
-		
-		tryBuildLine(screenX, screenY);		
-		eraseLine();
 		
 		return true;
 	}
@@ -74,12 +81,15 @@ public final class InputListener implements InputProcessor {
 		screenX = (int)Utils.toMetersX(screenX);
 		screenY = (int)Utils.toMetersY(screenY);
 		
-		if(Globals.getInstance().getState() != State.Running) {
-			return false;
+		switch(Globals.getInstance().getState()) {
+			case Running:
+				updateLine(screenX, screenY);
+				line.setDy2();
+		        break;
+			case GameOver:
+			default:
+				break;	
 		}
-		
-		updateLine(screenX, screenY);
-		line.setDy2();
 
 		return true;
 	}

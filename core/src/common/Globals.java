@@ -76,5 +76,9 @@ public final class Globals {
 	
 	public void setState(State state) {
 		this.state = state;
+		
+		if(state == State.GameOver && level != null) {
+			game.setNeedsLevelReset();
+		}
 	}
 }

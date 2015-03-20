@@ -20,6 +20,7 @@ import common.Utils;
 
 public class Game extends ApplicationAdapter {
 
+	private boolean needsLevelReset = false;
 	private int numBits = 0;
 	private BitmapFont font;
 	private Globals globals;
@@ -34,7 +35,7 @@ public class Game extends ApplicationAdapter {
 	public void create() {
 		globals = Globals.getInstance();
 		globals.setGame(this);
-		globals.setState(State.Running);
+		globals.setState(State.GameOver);
 		
 		polygonSpriteBatch = new PolygonSpriteBatch();
 		spriteBatch = new SpriteBatch();
@@ -62,14 +63,14 @@ public class Game extends ApplicationAdapter {
 		polygonSpriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		polygonSpriteBatch.begin();
 		{
-			drawFilledPolygons();
+			level.drawFilledPolygons(polygonSpriteBatch);
 		}
 		polygonSpriteBatch.end();
 		
 		spriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		spriteBatch.begin();
 		{
-			drawNumBitsText();
+			drawSprites();
 		}
 		spriteBatch.end();
 
@@ -77,11 +78,7 @@ public class Game extends ApplicationAdapter {
 		shapeRenderer.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		shapeRenderer.begin(ShapeType.Line); 
 		{
-			InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
-			inputListener.getLine().draw(shapeRenderer);
-			level.drawFatals(shapeRenderer);
-			
-			debugRenderer.render(level.getWorld(), debugMatrix);
+			drawShapes();
 		}
 		shapeRenderer.end();
 	}
@@ -96,6 +93,10 @@ public class Game extends ApplicationAdapter {
 		numBits += num;
 	}
 	
+	public void setNeedsLevelReset() {
+		needsLevelReset = true;
+	}
+	
 	private void update() {
 		globals.updateCamera();
 		InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
@@ -103,30 +104,61 @@ public class Game extends ApplicationAdapter {
 		inputListener.checkLineValidity();
 		
 		switch(globals.getState()) {
-			case Loading:
-				break;
 			case Running:
 				level.update();
 				break;
 			case GameOver:
-				level.reset();
-				numBits = 0;
-				globals.setState(State.Running);
-				break;
-			case Paused:
+				if(needsLevelReset) {
+					needsLevelReset = false;
+					level.reset();
+					numBits = 0;
+				}
+			default:
 				break;
 		}
 	}
 	
-	private void drawFilledPolygons() {
-		level.drawFilledPolygons(polygonSpriteBatch);
+	private void drawShapes() {
+		switch(Globals.getInstance().getState()) {
+			case Running:
+				InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
+				inputListener.getLine().draw(shapeRenderer);
+				level.drawFatals(shapeRenderer);
+				
+				debugRenderer.render(level.getWorld(), debugMatrix);
+		        break;
+			default:
+				break;	
+		}
+	}
+	
+	private void drawSprites() {
+		switch(Globals.getInstance().getState()) {
+			case Running:
+				drawNumBitsText();
+				break;
+			case GameOver:
+				drawBeginText();
+				break;
+			default:
+				break;
+		}
 	}
 	
 	private void drawNumBitsText() {
 		String numBitsStr = numBits + " bits";
-		float numBitsTextWidth = font.getBounds(numBitsStr).width;
-		float numBitsTextX = Globals.VIEWPORT_WIDTH - numBitsTextWidth - 2;
-		float numBitsTextY = Utils.getCameraTop() + ((7.0f / 10.0f) * font.getBounds(numBitsStr).height);
-		font.draw(spriteBatch, numBitsStr, numBitsTextX, numBitsTextY);
+		float textWidth = font.getBounds(numBitsStr).width;
+		float textX = Globals.VIEWPORT_WIDTH - textWidth - 2;
+		float textY = Utils.getCameraTop() + ((7.0f / 10.0f) * font.getBounds(numBitsStr).height);
+		font.draw(spriteBatch, numBitsStr, textX, textY);
+	}
+	
+	private void drawBeginText() {
+		String numBitsStr = "Touch to begin.";
+		float textWidth = font.getBounds(numBitsStr).width;
+		float textHeight = font.getBounds(numBitsStr).height;
+		float textX = (Globals.VIEWPORT_WIDTH - textWidth) / 2;
+		float textY = (Globals.VIEWPORT_HEIGHT - textHeight) / 2;
+		font.draw(spriteBatch, numBitsStr, textX, textY);
 	}
 }
