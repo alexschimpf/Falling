@@ -1,6 +1,7 @@
 package entity.floating;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -13,8 +14,7 @@ public class FatalEntity extends NeutralEntity {
 		super(x, y, width, height);
 	}
 	
-	@Override
-	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
+	public void draw(ShapeRenderer shapeRenderer) {
 		shapeRenderer.setColor(Color.RED);
 		PolygonShape shape = (PolygonShape)body.getFixtureList().get(0).getShape();
 		float[] vertices = Utils.getWorldVertices(body, shape);

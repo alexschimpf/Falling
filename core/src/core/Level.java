@@ -3,16 +3,12 @@ package core;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Frustum;
-import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -22,17 +18,18 @@ import com.badlogic.gdx.utils.Array;
 import common.BodyData;
 import common.CollisionListener;
 import common.Globals;
-import common.IDraw;
 import common.IUpdate;
 import common.Line;
 import common.Utils;
 import entity.Entity;
 import entity.EntityFactory;
 import entity.TheEntity;
+import entity.floating.FatalEntity;
 import entity.floating.FloatingEntity;
 import entity.floating.LineEntity;
+import entity.floating.NeutralEntity;
 
-public class Level implements IUpdate, IDraw {
+public class Level implements IUpdate {
 
 	protected static final float GRAVITY = 8;
 	protected static final float DEFAULT_SPEED = 0.28f;
@@ -70,8 +67,15 @@ public class Level implements IUpdate, IDraw {
 		while(bodyIter.hasNext()) {
 			Body body = bodyIter.next();
 			Entity entity = getEntityFromBody(body);
-			if(entity == null) {
+			
+			if(entity == null || body.getUserData() == null) {
 				continue;
+			}
+			
+			BodyData bodyData = (BodyData)body.getUserData();
+			if(bodyData.needsRemoved()) {
+				bodyIter.remove();
+				entity.done();
 			}
 			
 			if(entity.update()) {
@@ -94,9 +98,40 @@ public class Level implements IUpdate, IDraw {
 	public void done() {
 	}	
 	
-	@Override
-	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		drawEntities(spriteBatch, shapeRenderer);
+	public void drawFatals(ShapeRenderer shapeRenderer) {
+		Iterator<Body> bodyIter = getBodies().iterator();
+		while(bodyIter.hasNext()) {
+			Body body = bodyIter.next();
+			Entity entity = getEntityFromBody(body);
+			
+			if(entity == null || body.getUserData() == null) {
+				continue;
+			}
+			
+			if(!(entity instanceof FatalEntity)) {
+				continue;
+			}
+			
+			((FatalEntity)entity).draw(shapeRenderer);
+		}
+	}
+	
+	public void drawFilledPolygons(PolygonSpriteBatch polygonSpriteBatch) {
+		Iterator<Body> bodyIter = getBodies().iterator();
+		while(bodyIter.hasNext()) {
+			Body body = bodyIter.next();
+			Entity entity = getEntityFromBody(body);
+			
+			if(entity == null || body.getUserData() == null) {
+				continue;
+			}
+			
+			if(!(entity instanceof NeutralEntity) || entity instanceof FatalEntity) {
+				continue;
+			}
+			
+			((NeutralEntity)entity).drawFilledPolygon(polygonSpriteBatch);
+		}
 	}
 	
 	public void reset() {
@@ -172,61 +207,31 @@ public class Level implements IUpdate, IDraw {
 		
 		float levelFloor = MathUtils.random(screenHeight / 2, screenHeight - MAX_ENTITY_SIZE);
 		if(entityCount > 0) {
-			levelFloor = floorEntity.getY() + floorEntity.getHeight();
+			levelFloor = floorEntity.getBottom();
 		}
 		
-		boolean lastPlacedClose = false;
-		float tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
+		float tryWidth;
 		float tryHeight;	
 		float currX = MathUtils.random(0, screenWidth - MAX_ENTITY_SIZE);
 		float currY = levelFloor + MathUtils.random(MAX_ENTITY_SIZE * 2, screenHeight * 0.5f);
 		FloatingEntity entity = null;
-		while(entityCount <= MAX_ENTITY_COUNT) {	
+		while(entityCount <= MAX_ENTITY_COUNT) {
+			tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 			tryHeight = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
 			
 			entity = EntityFactory.getRandomFloatingEntity(currX, currY, tryWidth, tryHeight);
-			entity.setUserData();
 			entityCount++;
 
 			floorEntity = entity;
 			
-			float actualWidth = entity.getWidth();
-			float actualHeight = entity.getHeight();	
-	
-			if(!lastPlacedClose && MathUtils.random() < 0.4f) {
-				lastPlacedClose = true;
-				currY += MathUtils.random(actualHeight, actualHeight * 2);
-				
-				float newX;
-				float leftSpace = currX;
-				float rightSpace = screenWidth - (currX + actualWidth);				
-				if(leftSpace > rightSpace) {
-					newX = MathUtils.random(MAX_ENTITY_SIZE, leftSpace / 2);
-				} else {
-					newX = Globals.VIEWPORT_WIDTH - MathUtils.random(MAX_ENTITY_SIZE, rightSpace / 2);
-				}
-				
-				float space = Math.abs(currX - newX);
-				tryWidth = MathUtils.random(space / 4, space / 2);
-				
-				currX = Math.max(newX, MIN_ENTITY_SIZE);
-			} else {
-				lastPlacedClose = false;
-				tryWidth = MathUtils.random(MIN_ENTITY_SIZE, MAX_ENTITY_SIZE);
-				currX = MathUtils.random(MIN_ENTITY_SIZE, screenWidth - tryWidth);
-				currY += MathUtils.random(actualHeight + MIN_ENTITY_SIZE, screenHeight * 0.5f);
-			}
+			float prevY = currY;
+			currX = MathUtils.random(MIN_ENTITY_SIZE, screenWidth - MIN_ENTITY_SIZE);
+			currY += MathUtils.random(MAX_ENTITY_SIZE, screenHeight * 0.5f);
 			
-			tryWidth = Math.max(MIN_ENTITY_SIZE, tryWidth);
-			tryHeight = Math.max(MIN_ENTITY_SIZE, tryHeight);
-		}
-	}
-	
-	protected void drawEntities(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-		for(Body body : getBodies()) {
-			Entity entity = getEntityFromBody(body);		
-			if(entity != null) {
-				entity.draw(spriteBatch, shapeRenderer);
+			if(MathUtils.random() < 0.5f) {
+				if(currY - prevY > MAX_ENTITY_SIZE) {
+					currY -= MIN_ENTITY_SIZE;
+				}
 			}
 		}
 	}

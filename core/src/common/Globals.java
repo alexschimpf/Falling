@@ -6,7 +6,7 @@ import core.Game;
 import core.Level;
 import entity.TheEntity;
 
-public class Globals {
+public final class Globals {
 	
 	public static final float VIEWPORT_WIDTH = 60.0f;
 	public static final float VIEWPORT_HEIGHT = 100.0f;
@@ -46,7 +46,7 @@ public class Globals {
 			float theEntitySpeed = theEntity.getBody().getLinearVelocity().y / 50;
 			camera.translate(0, Math.max(theEntitySpeed, level.getSpeed()));
 			
-			if(theEntity.getY() + (theEntity.getHeight() * 2) > Utils.getCameraBottom()) {
+			if(theEntity.getBottom() + (theEntity.getHeight() * 2) > Utils.getCameraBottom()) {
 				camera.translate(0, Globals.VIEWPORT_HEIGHT / 2);
 			}
 		}

@@ -15,11 +15,14 @@ public final class LineEntity extends FloatingEntity {
 	
 	private long startTime;
 	private float color = 1;
+	private float x1, y1;
 	private float x2, y2;
 	
 	public LineEntity(float x1, float y1, float x2, float y2) {
 		super();
 		
+		this.x1 = x1;
+		this.y1 = y1;
 		this.x2 = x2;
 		this.y2 = y2;
 		
@@ -44,7 +47,7 @@ public final class LineEntity extends FloatingEntity {
 		
 		color = elapsed / LIFE_TIME;
 		
-		return Math.max(getY(), y2) < Utils.getCameraTop();
+		return Math.max(y1, y2) < Utils.getCameraTop();
 	}
 	
 	@Override
@@ -73,6 +76,14 @@ public final class LineEntity extends FloatingEntity {
 		body.createFixture(fDef);
 		
 		shape.dispose();
+	}
+	
+	public float getX1() {
+		return x1;
+	}
+	
+	public float getY1() {
+		return y1;
 	}
 	
 	public float getX2() {

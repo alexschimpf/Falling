@@ -8,7 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 
 import entity.floating.LineEntity;
 
-public class InputListener implements InputProcessor {
+public final class InputListener implements InputProcessor {
 	
 	private boolean isLineAnchored = false;
 	private Color lineColor = Color.WHITE;

@@ -7,4 +7,6 @@ public abstract class CollectableEntity extends FloatingEntity {
 	public CollectableEntity() {
 		super();
 	}
+
+	public abstract void collect();
 }

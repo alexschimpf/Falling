@@ -2,6 +2,7 @@ package common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Frustum;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 
 import entity.Entity;
 
-public class Line implements IDraw{
+public class Line {
 	public float x1, y1;
 	public float x2, y2;
 	public Vector2 p1;
@@ -36,8 +37,7 @@ public class Line implements IDraw{
 		p2 = new Vector2();
 	}
 	
-	@Override
-	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {		
+	public void draw(ShapeRenderer shapeRenderer) {		
 		Color color = ((InputListener)Gdx.input.getInputProcessor()).getLineColor();
 		
 		float y1 = Utils.getCameraTop() + dy1;
@@ -81,7 +81,7 @@ public class Line implements IDraw{
 
 	public boolean intersectsEntity(Entity entity) {
 		Frustum frustum = Globals.getInstance().getCamera().frustum;
-		if(!frustum.boundsInFrustum(entity.getX(), entity.getY(), 0, entity.getWidth() / 2, entity.getHeight() / 2, 0)) {
+		if(!frustum.boundsInFrustum(entity.getLeft(), entity.getTop(), 0, entity.getWidth() / 2, entity.getHeight() / 2, 0)) {
 			return false;
 		}
 		
@@ -91,7 +91,7 @@ public class Line implements IDraw{
 			if(shape instanceof CircleShape) {
 				CircleShape circleShape = (CircleShape)shape;
 				float radius = circleShape.getRadius();
-				Vector2 center = new Vector2(entity.getX(), entity.getY());
+				Vector2 center = new Vector2(entity.getCenterX(), entity.getCenterY());
 				return Intersector.intersectSegmentCircle(p1, p2, center, radius);
 			} else if(shape instanceof PolygonShape) {
 				PolygonShape polygonShape = (PolygonShape)shape;

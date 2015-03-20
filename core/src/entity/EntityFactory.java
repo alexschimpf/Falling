@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import entity.floating.FatalEntity;
 import entity.floating.FloatingEntity;
 import entity.floating.NeutralEntity;
+import entity.floating.collectable.CoinEntity;
 
 public final class EntityFactory {
 
@@ -14,10 +15,17 @@ public final class EntityFactory {
 	 * However, certain entities may choose to use their own custom width and height.
 	 */
 	public static FloatingEntity getRandomFloatingEntity(float x, float y, float tryWidth, float tryHeight) {
-		if(MathUtils.random() < .35) {
-			return new FatalEntity(x, y, tryWidth, tryHeight);
+	    FloatingEntity entity;
+		if(MathUtils.random() < 0.1) {
+	    	entity = new CoinEntity(x, y);
+	    } else if(MathUtils.random() < .35) {
+			entity = new FatalEntity(x, y, tryWidth, tryHeight);
 		} else {
-			return new NeutralEntity(x, y, tryWidth, tryHeight);
+			entity = new NeutralEntity(x, y, tryWidth, tryHeight);
 		}
+		
+		entity.setUserData();
+		
+		return entity;
 	}
 }

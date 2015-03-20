@@ -5,9 +5,6 @@ import entity.Entity;
 
 public abstract class FloatingEntity extends Entity {
 
-	protected float vx;
-	protected float vy;
-	
 	public FloatingEntity(float x, float y, float width, float height) {
 		super();
 		
@@ -23,9 +20,7 @@ public abstract class FloatingEntity extends Entity {
 	
 	@Override
 	public boolean update() {
-		body.setLinearVelocity(vx, -vy);
-		
-		return super.update() || getY() + height < Utils.getCameraTop();
+		return super.update() || getBottom() < Utils.getCameraTop();
 	}
 	
 	@Override

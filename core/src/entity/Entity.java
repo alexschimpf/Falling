@@ -1,15 +1,12 @@
 package entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import common.BodyData;
 import common.Globals;
-import common.IDraw;
 import common.IUpdate;
 
-public abstract class Entity implements IUpdate, IDraw {
+public abstract class Entity implements IUpdate {
 	
 	protected float width, height;
 	protected Body body;
@@ -19,10 +16,6 @@ public abstract class Entity implements IUpdate, IDraw {
 	}
 	
 	protected abstract void buildBody(float x, float y);
-	
-	@Override
-	public void draw(SpriteBatch spriteBatch, ShapeRenderer shapeRenderer) {
-	}
 	
 	@Override
 	public boolean update() {
@@ -43,11 +36,27 @@ public abstract class Entity implements IUpdate, IDraw {
 		body.setUserData(bodyData);
 	}
 	
-	public float getX() {
+	public float getLeft() {
+		return getCenterX() - (width / 2);
+	}
+	
+	public float getRight() {
+		return getCenterX() + (width / 2);
+	}
+	
+	public float getTop() {
+		return getCenterY() - (height / 2);
+	}
+	
+	public float getBottom() {
+		return getCenterY() + (height / 2);
+	}
+	
+	public float getCenterX() {
 		return body.getPosition().x;
 	}
 	
-	public float getY() {	
+	public float getCenterY() {	
 		return body.getPosition().y;
 	}
 	
