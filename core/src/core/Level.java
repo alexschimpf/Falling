@@ -31,8 +31,8 @@ import entity.floating.NeutralEntity;
 
 public class Level implements IUpdate {
 
-	protected static final float GRAVITY = 8;
-	protected static final float DEFAULT_SPEED = 0.28f;
+	protected static final float GRAVITY = 9;
+	protected static final float DEFAULT_SPEED = 0.2f;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
 	protected static final float MIN_ENTITY_SIZE = Globals.VIEWPORT_WIDTH / 18;

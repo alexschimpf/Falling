@@ -43,12 +43,8 @@ public final class Globals {
 	public void updateCamera() {	
 		if(state == State.Running) {
 			TheEntity theEntity = level.getTheEntity();
-			float theEntitySpeed = theEntity.getBody().getLinearVelocity().y / 50;
+			float theEntitySpeed = theEntity.getBody().getLinearVelocity().y / 47;
 			camera.translate(0, Math.max(theEntitySpeed, level.getSpeed()));
-			
-			if(theEntity.getBottom() + (theEntity.getHeight() * 2) > Utils.getCameraBottom()) {
-				camera.translate(0, Globals.VIEWPORT_HEIGHT / 2);
-			}
 		}
 
 		camera.update();

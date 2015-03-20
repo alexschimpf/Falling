@@ -19,10 +19,6 @@ public abstract class Entity implements IUpdate {
 	
 	@Override
 	public boolean update() {
-		float vx = body.getLinearVelocity().x;
-		float vy = body.getLinearVelocity().y;
-		body.setLinearVelocity(vx, Math.min(vy, 25));
-		
 		return false;
 	}
 	

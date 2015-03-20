@@ -29,6 +29,10 @@ public final class TheEntity extends Entity {
 	@Override
 	public boolean update() {
 		super.update();
+		
+		float vx = body.getLinearVelocity().x;
+		float vy = body.getLinearVelocity().y;
+		body.setLinearVelocity(vx, Math.min(vy, 20));
 
 		if(getBottom() < Utils.getCameraTop()) {
 			return true;
