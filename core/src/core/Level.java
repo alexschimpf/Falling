@@ -28,11 +28,12 @@ import entity.floating.FatalEntity;
 import entity.floating.FloatingEntity;
 import entity.floating.LineEntity;
 import entity.floating.NeutralEntity;
+import entity.floating.collectable.CollectableEntity;
 
 public class Level implements IUpdate {
 
 	protected static final float GRAVITY = 9;
-	protected static final float DEFAULT_SPEED = 0.2f;
+	protected static final float DEFAULT_SPEED = 0.25f;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
 	protected static final float MIN_ENTITY_SIZE = Globals.VIEWPORT_WIDTH / 18;
@@ -73,12 +74,7 @@ public class Level implements IUpdate {
 			}
 			
 			BodyData bodyData = (BodyData)body.getUserData();
-			if(bodyData.needsRemoved()) {
-				bodyIter.remove();
-				entity.done();
-			}
-			
-			if(entity.update()) {
+			if(entity.update() || bodyData.needsRemoved()) {
 				entity.done();
 				
 				if(entity instanceof FloatingEntity && !(entity instanceof LineEntity)) {

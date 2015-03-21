@@ -39,10 +39,7 @@ public class Line {
 	
 	public void draw(ShapeRenderer shapeRenderer) {		
 		Color color = ((InputListener)Gdx.input.getInputProcessor()).getLineColor();
-		
-		float y1 = Utils.getCameraTop() + dy1;
-		float y2 = Utils.getCameraTop() + dy2;
-		
+
 		shapeRenderer.setColor(color);
 		shapeRenderer.line(x1, y1, x2, y2);
 	}
@@ -65,10 +62,14 @@ public class Line {
 	
 	public void setDy1() {
 		dy1 = y1 - Utils.getCameraTop();
+		y1 = Utils.getCameraTop() + dy1;
+		p1.y = y1;
 	}
 	
 	public void setDy2() {
 		dy2 = y2 - Utils.getCameraTop();
+		y2 = Utils.getCameraTop() + dy2;
+		p2.y = y2;
 	}
 	
 	public float getDy1() {
@@ -92,7 +93,7 @@ public class Line {
 				CircleShape circleShape = (CircleShape)shape;
 				float radius = circleShape.getRadius();
 				Vector2 center = new Vector2(entity.getCenterX(), entity.getCenterY());
-				return Intersector.intersectSegmentCircle(p1, p2, center, radius);
+				return Intersector.intersectSegmentCircle(p1, p2, center, radius * radius);
 			} else if(shape instanceof PolygonShape) {
 				PolygonShape polygonShape = (PolygonShape)shape;
 				

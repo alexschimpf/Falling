@@ -100,11 +100,11 @@ public class Game extends ApplicationAdapter {
 	private void update() {
 		globals.updateCamera();
 		InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
-		inputListener.updateLine();
-		inputListener.checkLineValidity();
 		
 		switch(globals.getState()) {
 			case Running:
+				inputListener.updateLine();
+				inputListener.checkLineValidity();
 				level.update();
 				break;
 			case GameOver:

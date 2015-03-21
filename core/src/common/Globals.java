@@ -44,7 +44,13 @@ public final class Globals {
 		if(state == State.Running) {
 			TheEntity theEntity = level.getTheEntity();
 			float theEntitySpeed = theEntity.getBody().getLinearVelocity().y / 47;
-			camera.translate(0, Math.max(theEntitySpeed, level.getSpeed()));
+			
+			if(camera.position.y > level.getTheEntity().getCenterY()) {
+				camera.translate(0, Math.max(theEntitySpeed, level.getSpeed()));
+			} else {
+				float diff = level.getTheEntity().getCenterY() - camera.position.y;
+				camera.translate(0, diff);
+			}
 		}
 
 		camera.update();

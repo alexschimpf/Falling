@@ -67,6 +67,7 @@ public final class InputListener implements InputProcessor {
 				eraseLine();
 		        break;
 			case GameOver:
+				eraseLine();
 				Globals.getInstance().setState(State.Running);
 				break;
 			default:
@@ -156,7 +157,7 @@ public final class InputListener implements InputProcessor {
 		}
 			
 		updateLine(x, y);	
-		LineEntity lineEntity = new LineEntity(line.x1, Utils.getCameraTop() + line.getDy1(), line.x2, Utils.getCameraTop() + line.getDy2());
+		LineEntity lineEntity = new LineEntity(line.x1, line.y1, line.x2, line.y2);
 		lineEntity.setUserData();
 		Globals.getInstance().getLevel().addLine(lineEntity);
 	}
