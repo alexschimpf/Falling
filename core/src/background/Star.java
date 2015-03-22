@@ -2,6 +2,7 @@ package background;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import common.Globals;
@@ -15,7 +16,7 @@ public class Star implements IUpdate {
 	public float x, y;
 	public float width, height;
 	public float dy;
-	public Texture texture;
+	public TextureRegion texture;
 	
 	public Star(float x, float y, float width, float height) {
 		this.x = x;

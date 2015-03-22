@@ -122,7 +122,7 @@ public final class Level implements IUpdate {
 				continue;
 			}
 			
-			if(!(entity instanceof NeutralEntity) || entity instanceof FatalEntity) {
+			if(!(entity instanceof NeutralEntity)) {
 				continue;
 			}
 			

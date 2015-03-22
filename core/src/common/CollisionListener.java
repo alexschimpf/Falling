@@ -36,7 +36,7 @@ public final class CollisionListener implements ContactListener {
 	
 		checkFatalCollision(contact, entityA, entityB);
 		checkCollectableCollision(contact, entityA, entityB);
-		checkNeutralCollision(contact, entityA, entityB, true);
+		//checkNeutralCollision(contact, entityA, entityB, true);
 		
 	}
 
@@ -55,7 +55,7 @@ public final class CollisionListener implements ContactListener {
 		Entity entityA = dataA.getEntity();
 		Entity entityB = dataB.getEntity();
 		
-		checkNeutralCollision(contact, entityA, entityB, false);
+		//checkNeutralCollision(contact, entityA, entityB, false);
 	}
 
 	@Override
@@ -101,19 +101,19 @@ public final class CollisionListener implements ContactListener {
 		}
 	}
 	
-	private void checkNeutralCollision(Contact contact, Entity a, Entity b, boolean beginContact) {
-		boolean theEntity = a instanceof TheEntity || b instanceof TheEntity;
-		boolean neutral = a instanceof NeutralEntity || b instanceof NeutralEntity;
-		neutral = neutral && !(a instanceof FatalEntity);
-		if(theEntity && neutral) {
-			NeutralEntity neutralObj;
-			if(a instanceof NeutralEntity) {
-				neutralObj = (NeutralEntity)a;
-			} else {
-				neutralObj = (NeutralEntity)b;
-			}
-
-			neutralObj.setLitUp(beginContact);
-		}	
-	}
+//	private void checkNeutralCollision(Contact contact, Entity a, Entity b, boolean beginContact) {
+//		boolean theEntity = a instanceof TheEntity || b instanceof TheEntity;
+//		boolean neutral = a instanceof NeutralEntity || b instanceof NeutralEntity;
+//		neutral = neutral && !(a instanceof FatalEntity);
+//		if(theEntity && neutral) {
+//			NeutralEntity neutralObj;
+//			if(a instanceof NeutralEntity) {
+//				neutralObj = (NeutralEntity)a;
+//			} else {
+//				neutralObj = (NeutralEntity)b;
+//			}
+//
+//			neutralObj.setLitUp(beginContact);
+//		}	
+//	}
 }

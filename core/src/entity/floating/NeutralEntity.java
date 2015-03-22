@@ -1,6 +1,6 @@
 package entity.floating;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
@@ -19,22 +19,18 @@ import common.Utils;
 
 public class NeutralEntity extends FloatingEntity {
 
-	protected boolean isLitUp = false;
+	protected TextureRegion texture;
 	
 	public NeutralEntity(float x, float y, float width, float height) {
 		super(x, y, width, height);
+		texture = Textures.getInstance().getRandomNeutralTexture();	
 	}
 
-	public void drawFilledPolygon(PolygonSpriteBatch polygonSpriteBatch) {
-		if(!isLitUp) {
-			return;
-		}
-		
+	public void drawFilledPolygon(PolygonSpriteBatch polygonSpriteBatch) {	
 		float[] vertices = Utils.getLocalVertices((PolygonShape)getBody().getFixtureList().get(0).getShape());
 		short[] triangles = new short[] { 0, 1, 2, 0, 2, 3 };
 		
-		Texture texture = Textures.getInstance().getBlueTexture();
-		PolygonRegion polyReg = new PolygonRegion(new TextureRegion(texture), vertices, triangles);
+		PolygonRegion polyReg = new PolygonRegion(texture, vertices, triangles);
 		
 		PolygonSprite sprite = new PolygonSprite(polyReg);
 		sprite.setOrigin(body.getLocalCenter().x, body.getLocalCenter().y);
@@ -69,14 +65,6 @@ public class NeutralEntity extends FloatingEntity {
 		}
 
 		shape.dispose();
-	}
-	
-	public boolean isLitUp() {
-		return isLitUp;
-	}
-	
-	public void setLitUp(boolean flag) {
-		isLitUp = flag;
 	}
 	
 	protected float[] getRandomVertices(Body body, float x, float y) {
