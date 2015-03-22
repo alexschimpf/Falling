@@ -37,7 +37,7 @@ public class Star implements IUpdate {
 		}
 		
 		
-		y = Utils.getCameraTop() + dy - (Gdx.graphics.getDeltaTime() * (Globals.getInstance().getLevel().getSpeed() * 8));
+		y = Utils.getCameraTop() + dy - (Gdx.graphics.getDeltaTime() * Globals.getInstance().getLevel().getSpeed() * 8);
 		dy = y - Utils.getCameraTop();
 		
 		return y + height < Utils.getCameraTop();

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 
 import common.Globals;
@@ -20,12 +21,17 @@ public final class Background implements IUpdate {
 	protected static final float MIN_STAR_SIZE = Globals.VIEWPORT_WIDTH / 200;
 	protected static final float MAX_STAR_SIZE = Globals.VIEWPORT_WIDTH / 100;
 	
+	private float planetHeight;
+	private float planetWidth;
 	private float starFloor = 0;
 	private BackgroundModifierEntity modifier;
 	private Textures textures = Textures.getInstance();
 	private LinkedList<Star> stars = new LinkedList<Star>();
 	
-	public Background() {		
+	public Background() {	
+		TextureRegion planetTexture = textures.getPlanetTexture();
+		planetHeight = Globals.VIEWPORT_HEIGHT / 3;
+		planetWidth = planetTexture.getRegionWidth() * planetHeight / planetTexture.getRegionHeight();
 	}
 	
 	public void draw(SpriteBatch spriteBatch) {
@@ -34,6 +40,9 @@ public final class Background implements IUpdate {
 				spriteBatch.draw(star.texture, star.x, star.y, star.width, star.height);
 			}
 		}
+		
+		TextureRegion planetTexture = textures.getPlanetTexture();
+		spriteBatch.draw(planetTexture, 0, Utils.getCameraBottom() - planetHeight, planetWidth, planetHeight);
 	}
 
 	@Override

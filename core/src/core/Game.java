@@ -65,7 +65,10 @@ public final class Game extends ApplicationAdapter {
 		spriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		spriteBatch.begin();
 		{
-			Globals.getInstance().getBackground().draw(spriteBatch);
+			if(globals.getState() == State.Running) {
+				Globals.getInstance().getBackground().draw(spriteBatch);
+			}
+			
 			drawSprites();
 		}
 		spriteBatch.end();
