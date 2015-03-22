@@ -18,7 +18,7 @@ import common.Line;
 import common.State;
 import common.Utils;
 
-public class Game extends ApplicationAdapter {
+public final class Game extends ApplicationAdapter {
 
 	private boolean needsLevelReset = false;
 	private int numBits = 0;
@@ -49,16 +49,26 @@ public class Game extends ApplicationAdapter {
 		
 		Gdx.input.setInputProcessor(new InputListener());
 		
+		globals.initBackground();
 		globals.initLevel();
 		level = globals.getLevel();
 	}
 
 	@Override
 	public void render() {
+		super.render();
+		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		update();
+		spriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
+		spriteBatch.begin();
+		{
+			Globals.getInstance().getBackground().draw(spriteBatch);
+			drawSprites();
+		}
+		spriteBatch.end();
 		
 		polygonSpriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		polygonSpriteBatch.begin();
@@ -66,13 +76,6 @@ public class Game extends ApplicationAdapter {
 			level.drawFilledPolygons(polygonSpriteBatch);
 		}
 		polygonSpriteBatch.end();
-		
-		spriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
-		spriteBatch.begin();
-		{
-			drawSprites();
-		}
-		spriteBatch.end();
 
 		debugMatrix = new Matrix4(Globals.getInstance().getCamera().combined);
 		shapeRenderer.setProjectionMatrix(Globals.getInstance().getCamera().combined);
@@ -103,12 +106,14 @@ public class Game extends ApplicationAdapter {
 		
 		switch(globals.getState()) {
 			case Running:
+				Globals.getInstance().getBackground().update();
 				inputListener.checkLineValidity();
 				level.update();
 				break;
 			case GameOver:
 				if(needsLevelReset) {
 					needsLevelReset = false;
+					globals.initBackground();
 					level.reset();
 					numBits = 0;
 				}

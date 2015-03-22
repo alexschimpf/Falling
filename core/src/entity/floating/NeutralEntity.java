@@ -64,7 +64,7 @@ public class NeutralEntity extends FloatingEntity {
 		body.createFixture(fixtureDef);
 		
 		if(MathUtils.random() < 0.3f) {
-			float angularVelocity = MathUtils.random(0.5f, 1);
+			float angularVelocity = MathUtils.random(0.3f, 0.7f);
 			body.setAngularVelocity(angularVelocity);
 		}
 

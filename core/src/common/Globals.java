@@ -1,5 +1,7 @@
 package common;
 
+import background.Background;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 import core.Game;
@@ -14,12 +16,14 @@ public final class Globals {
 	private State state;
 	private Game game;
 	private Level level;
+	private Background background;
 	private OrthographicCamera camera;
 
 	private static Globals instance;
 
 	private Globals() {
 		resetCamera();
+		background = new Background();
 	}
 
 	public static Globals getInstance() {
@@ -33,6 +37,10 @@ public final class Globals {
 	public void initLevel() {
 		level = new Level();
 		level.initTheEntity();
+	}
+	
+	public void initBackground() {
+		background = new Background();
 	}
 	
 	public void resetCamera() {
@@ -82,5 +90,9 @@ public final class Globals {
 		if(state == State.GameOver && level != null) {
 			game.setNeedsLevelReset();
 		}
+	}
+	
+	public Background getBackground() {
+		return background;
 	}
 }

@@ -30,7 +30,7 @@ import entity.floating.LineEntity;
 import entity.floating.NeutralEntity;
 import entity.floating.collectable.CollectableEntity;
 
-public class Level implements IUpdate {
+public final class Level implements IUpdate {
 
 	protected static final float GRAVITY = 9;
 	protected static final float DEFAULT_SPEED = 0.25f;
