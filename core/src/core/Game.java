@@ -106,6 +106,10 @@ public final class Game extends ApplicationAdapter {
 	}
 	
 	public void setModifier(ModifierEntity modifier) {
+		if(modifier != null) {
+			modifier.modifyDone();
+		}
+		
 		this.modifier = modifier;
 	}
 	
@@ -115,12 +119,7 @@ public final class Game extends ApplicationAdapter {
 		
 		switch(globals.getState()) {
 			case Running:
-				if(modifier != null) {
-					if(modifier.modify()) {
-						modifier.done();
-						modifier = null;
-					}
-				}
+				tryUpdateModifier();
 				
 				Globals.getInstance().getBackground().update();
 				inputListener.checkLineValidity();
@@ -163,6 +162,15 @@ public final class Game extends ApplicationAdapter {
 				break;
 			default:
 				break;
+		}
+	}
+	
+	private void tryUpdateModifier() {
+		if(modifier != null) {
+			if(modifier.modify()) {
+				modifier.modifyDone();
+				modifier = null;
+			}
 		}
 	}
 	

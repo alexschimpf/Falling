@@ -21,8 +21,8 @@ public abstract class ModifierEntity extends CollectableEntity {
 	public ModifierEntity(float x, float y) {
 		super();
 		
-		width = Globals.VIEWPORT_WIDTH / 30;
-		height = Globals.VIEWPORT_WIDTH / 30;
+		width = Globals.VIEWPORT_WIDTH / 20;
+		height = Globals.VIEWPORT_WIDTH / 20;
 		
 		buildBody(x, y);
 	}
