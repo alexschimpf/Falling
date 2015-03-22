@@ -17,6 +17,7 @@ import common.InputListener;
 import common.Line;
 import common.State;
 import common.Utils;
+import entity.floating.collectable.modifier.ModifierEntity;
 
 public final class Game extends ApplicationAdapter {
 
@@ -25,6 +26,7 @@ public final class Game extends ApplicationAdapter {
 	private BitmapFont font;
 	private Globals globals;
 	private Level level;
+	private ModifierEntity modifier;
 	private PolygonSpriteBatch polygonSpriteBatch;
 	private SpriteBatch spriteBatch;
 	private ShapeRenderer shapeRenderer;
@@ -103,12 +105,23 @@ public final class Game extends ApplicationAdapter {
 		needsLevelReset = true;
 	}
 	
+	public void setModifier(ModifierEntity modifier) {
+		this.modifier = modifier;
+	}
+	
 	private void update() {
 		globals.updateCamera();
 		InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
 		
 		switch(globals.getState()) {
 			case Running:
+				if(modifier != null) {
+					if(modifier.modify()) {
+						modifier.done();
+						modifier = null;
+					}
+				}
+				
 				Globals.getInstance().getBackground().update();
 				inputListener.checkLineValidity();
 				level.update();
@@ -116,6 +129,7 @@ public final class Game extends ApplicationAdapter {
 			case GameOver:
 				if(needsLevelReset) {
 					needsLevelReset = false;
+					modifier = null;
 					globals.initBackground();
 					level.reset();
 					numBits = 0;

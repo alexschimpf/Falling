@@ -32,7 +32,7 @@ public final class TheEntity extends Entity {
 		
 		float vx = body.getLinearVelocity().x;
 		float vy = body.getLinearVelocity().y;
-		body.setLinearVelocity(vx, Math.min(vy, 20));
+		body.setLinearVelocity(vx, Math.min(vy, 30));
 
 		if(getBottom() < Utils.getCameraTop()) {
 			return true;

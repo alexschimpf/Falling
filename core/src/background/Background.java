@@ -3,7 +3,6 @@ package background;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,7 +11,6 @@ import common.Globals;
 import common.IUpdate;
 import common.Textures;
 import common.Utils;
-import entity.floating.collectable.background.BackgroundModifierEntity;
 
 public final class Background implements IUpdate {
 
@@ -24,7 +22,6 @@ public final class Background implements IUpdate {
 	private float planetHeight;
 	private float planetWidth;
 	private float starFloor = 0;
-	private BackgroundModifierEntity modifier;
 	private Textures textures = Textures.getInstance();
 	private LinkedList<Star> stars = new LinkedList<Star>();
 	
@@ -48,12 +45,6 @@ public final class Background implements IUpdate {
 	@Override
 	public boolean update() {
 		tryCreateStars();
-		
-		if(modifier != null) {
-			if(modifier.updateBackground(this)) {
-				modifier = null;
-			}
-		}
 		
 		Iterator<Star> starIt = stars.iterator();
 		while(starIt.hasNext()) {	
@@ -90,9 +81,5 @@ public final class Background implements IUpdate {
 
 	@Override
 	public void done() {		
-	}
-	
-	public void setModifier(BackgroundModifierEntity modifier) {
-		this.modifier = modifier;
 	}
 }

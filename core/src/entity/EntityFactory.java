@@ -6,6 +6,8 @@ import entity.floating.FatalEntity;
 import entity.floating.FloatingEntity;
 import entity.floating.NeutralEntity;
 import entity.floating.collectable.CoinEntity;
+import entity.floating.collectable.modifier.ModifierEntity;
+import entity.floating.collectable.modifier.TrippyModifierEntity;
 
 public final class EntityFactory {
 
@@ -16,7 +18,9 @@ public final class EntityFactory {
 	 */
 	public static FloatingEntity getRandomFloatingEntity(float x, float y, float tryWidth, float tryHeight) {
 	    FloatingEntity entity;
-		if(MathUtils.random() < 0.1) {
+	    if(MathUtils.random() < 0.08) {
+	    	entity = getRandomModifierEntity(x, y);
+	    } else if(MathUtils.random() < 0.13) {
 	    	entity = new CoinEntity(x, y);
 	    } else if(MathUtils.random() < .35) {
 			entity = new FatalEntity(x, y, tryWidth, tryHeight);
@@ -27,5 +31,9 @@ public final class EntityFactory {
 		entity.setUserData();
 		
 		return entity;
+	}
+	
+	public static ModifierEntity getRandomModifierEntity(float x, float y) {
+		return new TrippyModifierEntity(x, y);
 	}
 }

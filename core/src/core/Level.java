@@ -32,7 +32,7 @@ import entity.floating.collectable.CollectableEntity;
 
 public final class Level implements IUpdate {
 
-	protected static final float GRAVITY = 9;
+	protected static final float GRAVITY = 12;
 	protected static final float DEFAULT_SPEED = 0.25f;
 	protected static final int MAX_ENTITY_COUNT = 25;
 	protected static final int MIN_ENTITY_COUNT = 5;
