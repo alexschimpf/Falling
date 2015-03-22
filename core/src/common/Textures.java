@@ -5,15 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 
 public final class Textures {
 
-	private Texture greenTexture;
+	private Texture blueTexture;
 	
 	private static Textures instance;
 
 	private Textures() {
-		Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		pix.setColor(0, 1, 0, 0.3f);
-		pix.fill();
-		greenTexture = new Texture(pix);
+		blueTexture = buildColorTexture(0, 0, 1, 0.3f);
 	}
 
 	public static Textures getInstance() {
@@ -24,7 +21,14 @@ public final class Textures {
 		return instance;
 	}
 	
-	public Texture getGreenTexture() {
-		return greenTexture;
+	public Texture getBlueTexture() {
+		return blueTexture;
+	}
+	
+	private Texture buildColorTexture(float r, float g, float b, float a) {
+		Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+		pix.setColor(r, g, b, a);
+		pix.fill();
+		return new Texture(pix);
 	}
 }

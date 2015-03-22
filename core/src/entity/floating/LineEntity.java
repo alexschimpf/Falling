@@ -72,7 +72,7 @@ public final class LineEntity extends FloatingEntity {
 		fDef.shape = shape;
 		fDef.density = 0;
 		fDef.friction = 0;
-		fDef.restitution = .1f;
+		fDef.restitution = .3f;
 		body.createFixture(fDef);
 		
 		shape.dispose();

@@ -33,11 +33,12 @@ public class NeutralEntity extends FloatingEntity {
 		float[] vertices = Utils.getLocalVertices((PolygonShape)getBody().getFixtureList().get(0).getShape());
 		short[] triangles = new short[] { 0, 1, 2, 0, 2, 3 };
 		
-		Texture texture = Textures.getInstance().getGreenTexture();
+		Texture texture = Textures.getInstance().getBlueTexture();
 		PolygonRegion polyReg = new PolygonRegion(new TextureRegion(texture), vertices, triangles);
 		
 		PolygonSprite sprite = new PolygonSprite(polyReg);
-		sprite.setOrigin(0, 0);
+		sprite.setOrigin(body.getLocalCenter().x, body.getLocalCenter().y);
+		sprite.setRotation(MathUtils.radiansToDegrees * body.getAngle());
 		sprite.setX(getCenterX());
 		sprite.setY(getCenterY());
 		sprite.draw(polygonSpriteBatch);
@@ -46,7 +47,7 @@ public class NeutralEntity extends FloatingEntity {
 	@Override 
 	protected void buildBody(float x, float y) {
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.StaticBody;
+		bodyDef.type = BodyType.KinematicBody;
 		bodyDef.position.set(x, y);
 
 		World world = Globals.getInstance().getLevel().getWorld();
@@ -61,6 +62,11 @@ public class NeutralEntity extends FloatingEntity {
 		fixtureDef.friction = 0.1f;
 		fixtureDef.restitution = 0.3f;
 		body.createFixture(fixtureDef);
+		
+		if(MathUtils.random() < 0.3f) {
+			float angularVelocity = MathUtils.random(0.5f, 1);
+			body.setAngularVelocity(angularVelocity);
+		}
 
 		shape.dispose();
 	}
