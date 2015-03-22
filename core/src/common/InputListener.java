@@ -124,29 +124,13 @@ public final class InputListener implements InputProcessor {
 			lineColor = Color.RED;
 		}
 	}
-	
-	public void updateLine() {
-		updateLine(0, 0, false);
-	}
-	
-	private void updateLine(float x, float y) {
-		updateLine(x, y, true);
-	}
  	
-	private void updateLine(float x, float y, boolean fromTouchEvent) {
+	private void updateLine(float x, float y) {
 		if(isLineAnchored) {
-			if(!fromTouchEvent) {
-				x = (int)Utils.toMetersX(Gdx.input.getX());
-				y = (int)Utils.toMetersY(Gdx.input.getY());	
-			}
-			
 			line.setLine(line.x1, line.y1, x, y);
 		} else {
 			line.setLine(x, y, x, y);
-		}
-		
-		if(fromTouchEvent) {
-		  isLineAnchored = true;
+			isLineAnchored = true;
 		}
 	}
 	

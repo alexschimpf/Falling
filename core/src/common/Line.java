@@ -17,12 +17,12 @@ import com.badlogic.gdx.physics.box2d.Shape;
 
 import entity.Entity;
 
-public class Line {
+public final class Line {
 	public float x1, y1;
 	public float x2, y2;
-	public Vector2 p1;
-	public Vector2 p2;
 	
+	private Vector2 p1;
+	private Vector2 p2;	
 	private float dy1, dy2;
 	
 	public Line(float x1, float y1, float x2, float y2) {
@@ -40,6 +40,9 @@ public class Line {
 	public void draw(ShapeRenderer shapeRenderer) {		
 		Color color = ((InputListener)Gdx.input.getInputProcessor()).getLineColor();
 
+		y1 = Utils.getCameraTop() + dy1;
+		y2 = Utils.getCameraTop() + dy2;
+		
 		shapeRenderer.setColor(color);
 		shapeRenderer.line(x1, y1, x2, y2);
 	}
@@ -62,14 +65,10 @@ public class Line {
 	
 	public void setDy1() {
 		dy1 = y1 - Utils.getCameraTop();
-		y1 = Utils.getCameraTop() + dy1;
-		p1.y = y1;
 	}
 	
 	public void setDy2() {
 		dy2 = y2 - Utils.getCameraTop();
-		y2 = Utils.getCameraTop() + dy2;
-		p2.y = y2;
 	}
 	
 	public float getDy1() {
@@ -85,6 +84,9 @@ public class Line {
 		if(!frustum.boundsInFrustum(entity.getLeft(), entity.getTop(), 0, entity.getWidth() / 2, entity.getHeight() / 2, 0)) {
 			return false;
 		}
+		
+		p1.y = Utils.getCameraTop() + dy1;
+		p2.y = Utils.getCameraTop() + dy2;
 		
 		Body body = entity.getBody();
 		for(Fixture fixture : body.getFixtureList()) {

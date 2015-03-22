@@ -33,7 +33,7 @@ public class NeutralEntity extends FloatingEntity {
 		float[] vertices = Utils.getLocalVertices((PolygonShape)getBody().getFixtureList().get(0).getShape());
 		short[] triangles = new short[] { 0, 1, 2, 0, 2, 3 };
 		
-		Texture texture = Textures.getInstance().getSolidGreenTexture();
+		Texture texture = Textures.getInstance().getGreenTexture();
 		PolygonRegion polyReg = new PolygonRegion(new TextureRegion(texture), vertices, triangles);
 		
 		PolygonSprite sprite = new PolygonSprite(polyReg);

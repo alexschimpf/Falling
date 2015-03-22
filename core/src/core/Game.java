@@ -103,7 +103,6 @@ public class Game extends ApplicationAdapter {
 		
 		switch(globals.getState()) {
 			case Running:
-				inputListener.updateLine();
 				inputListener.checkLineValidity();
 				level.update();
 				break;

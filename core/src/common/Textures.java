@@ -1,20 +1,19 @@
 package common;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 public final class Textures {
 
-	private Texture solidGreenTexture;
+	private Texture greenTexture;
 	
 	private static Textures instance;
 
 	private Textures() {
 		Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-		pix.setColor(Color.GREEN);
+		pix.setColor(0, 1, 0, 0.3f);
 		pix.fill();
-		solidGreenTexture = new Texture(pix);
+		greenTexture = new Texture(pix);
 	}
 
 	public static Textures getInstance() {
@@ -25,7 +24,7 @@ public final class Textures {
 		return instance;
 	}
 	
-	public Texture getSolidGreenTexture() {
-		return solidGreenTexture;
+	public Texture getGreenTexture() {
+		return greenTexture;
 	}
 }

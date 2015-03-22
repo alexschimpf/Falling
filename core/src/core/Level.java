@@ -151,6 +151,7 @@ public class Level implements IUpdate {
 	public void initTheEntity() {
 		theEntity = new TheEntity();
 		theEntity.setUserData();
+		theEntity.getBody().setAngularVelocity(0.5f);
 		theEntity.getBody().setLinearVelocity(0, 10);
 	}
 	
