@@ -3,7 +3,6 @@ package common;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,23 +10,25 @@ import com.badlogic.gdx.math.MathUtils;
 
 public final class Textures {
 
-	private TextureRegion redTexture, lightRedTexture, blueTexture, greenTexture, yellowTexture;
+	private TextureRegion redTexture, lightRedTexture;
 	private TextureRegion starTexture;
 	private TextureRegion planetTexture;
 	private TextureRegion rockTexture;
 	private HashMap<String, TextureRegion> colorTextureMap = new HashMap<String, TextureRegion>();
+	
+	protected BodyEditorLoader loader;
 	
 	private static Textures instance;
 
 	private Textures() {
 		redTexture = buildColorTexture(1, 0, 0, 0.3f, "red");
 		lightRedTexture = buildColorTexture(1, 0, 0, 0.15f, "lightRed");
-		blueTexture = buildColorTexture(0, 0, 1, 0.3f, "blue");
-		greenTexture = buildColorTexture(0, 1, 0, 0.3f, "green");
-		yellowTexture = buildColorTexture(1, 1, 0, 0.3f, "yellow");
+		buildColorTexture(0, 0, 1, 0.3f, "blue");
+		buildColorTexture(0, 1, 0, 0.3f, "green");
+		buildColorTexture(1, 1, 0, 0.3f, "yellow");
 		starTexture = buildTextureRegion("star.png");
 		planetTexture = buildTextureRegion("planet.png");
-		rockTexture = buildTextureRegion("space_rock.jpg");
+		rockTexture = buildTextureRegion("space_rock.png");
 	}
 
 	public static Textures getInstance() {
@@ -36,6 +37,14 @@ public final class Textures {
 		}
 
 		return instance;
+	}
+	
+	public void initLoader() {
+		loader = new BodyEditorLoader(Gdx.files.internal("untitled.json"));
+	}
+	
+	public BodyEditorLoader getLoader() {
+		return loader;
 	}
 	
 	public TextureRegion getColorTexture(String color) {		

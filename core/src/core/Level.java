@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -112,7 +113,7 @@ public final class Level implements IUpdate {
 		}
 	}
 	
-	public void drawFilledPolygons(PolygonSpriteBatch polygonSpriteBatch) {
+	public void drawSprites(SpriteBatch batch) {
 		Iterator<Body> bodyIter = getBodies().iterator();
 		while(bodyIter.hasNext()) {
 			Body body = bodyIter.next();
@@ -126,7 +127,7 @@ public final class Level implements IUpdate {
 				continue;
 			}
 			
-			((NeutralEntity)entity).drawFilledPolygon(polygonSpriteBatch);
+			((NeutralEntity)entity).draw(batch);
 		}
 	}
 	

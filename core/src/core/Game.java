@@ -16,6 +16,7 @@ import common.Globals;
 import common.InputListener;
 import common.Line;
 import common.State;
+import common.Textures;
 import common.Utils;
 import entity.floating.collectable.modifier.ModifierEntity;
 
@@ -54,6 +55,8 @@ public final class Game extends ApplicationAdapter {
 		globals.initBackground();
 		globals.initLevel();
 		level = globals.getLevel();
+		
+		Textures.getInstance().initLoader();
 	}
 
 	@Override
@@ -64,9 +67,10 @@ public final class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		update();
+		
 		spriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		spriteBatch.begin();
-		{
+		{	
 			if(globals.getState() == State.Running) {
 				Globals.getInstance().getBackground().draw(spriteBatch);
 			}
@@ -78,7 +82,7 @@ public final class Game extends ApplicationAdapter {
 		polygonSpriteBatch.setProjectionMatrix(Globals.getInstance().getCamera().combined);
 		polygonSpriteBatch.begin();
 		{
-			level.drawFilledPolygons(polygonSpriteBatch);
+			//level.drawFilledPolygons(polygonSpriteBatch);
 		}
 		polygonSpriteBatch.end();
 
@@ -116,7 +120,7 @@ public final class Game extends ApplicationAdapter {
 	private void update() {
 		globals.updateCamera();
 		InputListener inputListener = (InputListener)Gdx.input.getInputProcessor();
-		
+
 		switch(globals.getState()) {
 			case Running:
 				tryUpdateModifier();
@@ -155,6 +159,7 @@ public final class Game extends ApplicationAdapter {
 	private void drawSprites() {
 		switch(Globals.getInstance().getState()) {
 			case Running:
+				level.drawSprites(spriteBatch);
 				drawNumBitsText();
 				break;
 			case GameOver:

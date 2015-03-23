@@ -18,9 +18,9 @@ public final class EntityFactory {
 	 */
 	public static FloatingEntity getRandomFloatingEntity(float x, float y, float tryWidth, float tryHeight) {
 	    FloatingEntity entity;
-	    if(MathUtils.random() < 0.08) {
+	    if(MathUtils.random() < 0.05) {
 	    	entity = getRandomModifierEntity(x, y);
-	    } else if(MathUtils.random() < 0.13) {
+	    } else if(MathUtils.random() < 0.10) {
 	    	entity = new CoinEntity(x, y);
 	    } else if(MathUtils.random() < .35) {
 			entity = new FatalEntity(x, y, tryWidth, tryHeight);
